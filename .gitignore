@@ -7,3 +7,12 @@ build/
 .zfa/
 .zfa.json
 worktrees/
+
+# Flutter plugin build artifacts (federated platform packages)
+zuraffa_permissions_platform_interface/.dart_tool/
+zuraffa_permissions_android/.dart_tool/
+zuraffa_permissions_android/build/
+zuraffa_permissions_ios/.dart_tool/
+zuraffa_permissions_ios/.flutter-plugins*
+zuraffa_permissions_macos/.dart_tool/
+zuraffa_permissions_macos/.flutter-plugins*

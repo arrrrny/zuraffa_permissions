@@ -1,0 +1,9 @@
+# The root package is pure Dart; the federated platform sub-packages
+# (zuraffa_permissions_android/ios/macos, *_platform_interface) are
+# Flutter plugins analyzed by their own toolchains (flutter analyze).
+analyzer:
+  exclude:
+    - zuraffa_permissions_platform_interface/**
+    - zuraffa_permissions_android/**
+    - zuraffa_permissions_ios/**
+    - zuraffa_permissions_macos/**

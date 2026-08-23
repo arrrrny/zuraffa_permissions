@@ -1,7 +1,5 @@
-import 'package:get_it/get_it.dart';
 import 'package:test/test.dart';
 import 'package:zuraffa/zuraffa.dart' show GetIt, ZuraffaSessionException;
-import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 
 /// Spec `001-permission-port` — the port contract, the registry, the
