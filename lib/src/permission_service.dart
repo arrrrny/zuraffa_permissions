@@ -1,0 +1,119 @@
+import 'package:zuraffa/zuraffa.dart';
+
+import 'data/permission/in_memory_permission_adapter.dart';
+import 'domain/entities/enums/permission_status.dart';
+import 'domain/entities/permission_scope/permission_scope.dart';
+import 'domain/entities/scopes/built_in_permission_scopes.dart';
+
+import 'domain/permission/permission_port.dart';
+
+export 'domain/permission/permission_port.dart';
+
+/// Registry of known permission scopes: the ten built-ins plus any custom
+/// scopes applications register (FR-004) — the SessionPresetRegistry
+/// pattern applied to permissions.
+class PermissionScopeRegistry {
+  final Map<String, PermissionScope> _scopes = {};
+
+  PermissionScopeRegistry({Iterable<PermissionScope> additional = const []}) {
+    for (final scope in BuiltInPermissionScopes.all) {
+      _scopes[scope.id] = scope;
+    }
+    for (final scope in additional) {
+      register(scope);
+    }
+  }
+
+  /// A registry with only the built-in scopes.
+  factory PermissionScopeRegistry.withBuiltIns() => PermissionScopeRegistry();
+
+  /// Registers a custom scope; duplicate ids are rejected with a typed
+  /// [ZuraffaSessionException]-style error so one domain cannot silently
+  /// shadow another's scope.
+  void register(PermissionScope scope) {
+    if (_scopes.containsKey(scope.id)) {
+      throw ZuraffaSessionException(
+        'duplicate_scope',
+        'A permission scope "${scope.id}" is already registered.',
+      );
+    }
+    _scopes[scope.id] = scope;
+  }
+
+  /// Looks up a scope by id, or `null` when unknown.
+  PermissionScope? lookup(String id) => _scopes[id];
+
+  /// Whether [id] is a registered scope.
+  bool contains(String id) => _scopes.containsKey(id);
+
+  /// All registered scopes.
+  Iterable<PermissionScope> get all => List.unmodifiable(_scopes.values);
+}
+
+/// The app-facing permission service: the port plus scope discovery.
+///
+/// ```dart
+/// final permissions = PermissionService(
+///   port: InMemoryPermissionAdapter(),
+/// );
+/// final status = await permissions.request('camera');
+/// ```
+class PermissionService {
+  /// The platform adapter (or the in-memory default in tests).
+  final PermissionPort port;
+
+  /// Registry consulted for scope metadata.
+  final PermissionScopeRegistry registry;
+
+  PermissionService({PermissionPort? port, PermissionScopeRegistry? registry})
+    : port = port ?? InMemoryPermissionAdapter(),
+      registry = registry ?? PermissionScopeRegistry.withBuiltIns();
+
+  /// Current status of [scopeId] without prompting.
+  Future<PermissionStatus> check(String scopeId) => port.check(scopeId);
+
+  /// Requests [scopeId]; an unknown scope is a typed error (a typo in
+  /// your own scope wiring should fail fast, not silently "succeed").
+  Future<PermissionStatus> request(String scopeId) {
+    if (!registry.contains(scopeId)) {
+      throw ZuraffaSessionException(
+        'unknown_scope',
+        'No permission scope registered under "$scopeId".',
+      );
+    }
+    return port.request(scopeId);
+  }
+
+  /// Opens OS settings; returns whether it could be launched.
+  Future<bool> openSettings() => port.openSettings();
+
+  /// All registered scopes (built-ins + customs).
+  Iterable<PermissionScope> get scopes => registry.all;
+}
+
+/// Registers the permission stack onto [getIt] (FR-007).
+///
+/// ```dart
+/// final getIt = GetIt.instance;
+/// registerPermissionDependencies(getIt);
+/// final permissions = getIt<PermissionService>();
+/// ```
+void registerPermissionDependencies(
+  GetIt getIt, {
+  PermissionPort? port,
+  PermissionScopeRegistry? registry,
+}) {
+  getIt
+    ..registerLazySingleton<PermissionPort>(
+      () => port ?? InMemoryPermissionAdapter(),
+    )
+    ..registerLazySingleton<PermissionScopeRegistry>(
+      () => registry ?? PermissionScopeRegistry.withBuiltIns(),
+    )
+    ..registerLazySingleton<PermissionService>(
+      () => PermissionService(
+        port: getIt<PermissionPort>(),
+        registry: getIt<PermissionScopeRegistry>(),
+      ),
+    );
+}

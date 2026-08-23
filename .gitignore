@@ -1,0 +1,9 @@
+.dart_tool/
+.build/
+pubspec.lock
+*.iml
+.DS_Store
+build/
+.zfa/
+.zfa.json
+worktrees/
