@@ -54,14 +54,41 @@
 Non-blocking quality improvements surfaced by the audit. The feature is complete;
 these raise two tests to the standard their siblings already meet.
 
-- [ ] 5.1 [P] Fix the misleading test name "all ten built-ins are registered with
+- [X] 5.1 [P] Fix the misleading test name "all ten built-ins are registered with
       zero configuration" (it actually asserts 11 ids and `hasLength(11)`). Rename
       to reflect the eleven built-ins, and align the stale "the ten built-ins"
       comments at `built_in_permission_scopes.dart:3` and `permission_service.dart:17`.
       Proof: `dart test -n "all eleven built-ins are registered with zero configuration"`
       passes and `grep -rn "ten built-ins"` finds no stale references. (Finding #1)
-- [ ] 5.2 [P] Strengthen `test/permission_test.dart:42` from
+- [X] 5.2 [P] Strengthen `test/permission_test.dart:42` from
       `BuiltInPermissionScopes.tracking.platformGroup isNotNull` to the concrete
       `equals('privacy')`, matching the camera check at line 30. Proof:
       `dart test -n "tracking is the 11th built-in scope, registered zero-config"`
       passes. (Finding #2, borderline vacuous assertion)
+
+## Phase 6 — TDD remediation (from /speckit.tdd.verify re-audit, PASS_WITH_GAPS)
+
+Non-blocking strength/style improvements surfaced by the independent smoke-pass
+subagent on the re-audit. The feature's TDD evidence is complete; these raise the
+suite to the standard its siblings meet and remove a redundant double.
+
+- [X] 6.1 [P] Strengthen `test/permission_test.dart:272-281` (U25 factory-wiring)
+      to pin the resolved `PermissionPort` instance, not only a canned value. After
+      `setPlatformPermissionPortFactory(() => fake)` + `registerPermissionDependencies(getIt)`,
+      assert `identical(getIt<PermissionPort>(), fake)` (keep the `granted` behavior
+      check). Proof: `dart test -n "registerPermissionDependencies uses the factory-supplied port"`
+      passes, and removing the factory wiring in `permission_service.dart` makes the new
+      assertion fail. (Finding #1, MED)
+- [X] 6.2 [P] Replace the hand-rolled `_FakePermissionPort`
+      (`test/permission_test.dart:318-334`) with the canonical
+      `InMemoryPermissionAdapter()..grant('camera')` so the factory-wiring tests reuse the
+      profile's only double. Proof: `dart test` green with `_FakePermissionPort` removed and
+      `grep -n "_FakePermissionPort" test/permission_test.dart` finds nothing. (Finding #2, MED)
+- [X] 6.3 [P] Split the multi-assert built-ins / scopes / request-result tests into one
+      `test` per behavior (or add `reason:` to every `expect`) so a failure names the broken
+      behavior. Proof: `dart test` green; each distinct assertion owns its own `test` block or
+      `reason:`. (Finding #3, MED)
+- [X] 6.4 [P] Introduce named scope-id constants (e.g. `const kCameraScope = 'camera'`) in the
+      test file and use them at every call site, removing the repeated raw-string literals.
+      Proof: `dart test` green and no bare scope-id string literals remain in the assertions.
+      (Finding #4, MED)

@@ -14,7 +14,7 @@ import 'domain/repositories/permission_scope_repository.dart';
 
 export 'domain/permission/permission_port.dart';
 
-/// Registry of known permission scopes: the ten built-ins plus any custom
+/// Registry of known permission scopes: the eleven built-ins plus any custom
 /// scopes applications register (FR-004) — the SessionPresetRegistry
 /// pattern applied to permissions.
 class PermissionScopeRegistry {

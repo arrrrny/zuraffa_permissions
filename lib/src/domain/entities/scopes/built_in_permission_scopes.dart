@@ -1,6 +1,6 @@
 import '../../../domain/entities/permission_scope/permission_scope.dart';
 
-/// Built-in permission scopes (FR-003): the ten every app touches,
+/// Built-in permission scopes (FR-003): the eleven every app touches,
 /// instantiable with zero configuration.
 abstract final class BuiltInPermissionScopes {
   /// Camera capture (photo/video).
