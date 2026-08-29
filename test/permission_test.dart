@@ -182,6 +182,23 @@ void main() {
       expect(await service.check('calendar'), PermissionStatus.granted);
     });
   });
+
+  group('permission status enum (FR-002)', () {
+    test('enumerates exactly the six required states', () {
+      expect(PermissionStatus.values, hasLength(6));
+      expect(
+        PermissionStatus.values.map((s) => s.name).toSet(),
+        {
+          'granted',
+          'denied',
+          'permanentlyDenied',
+          'undetermined',
+          'restricted',
+          'limited',
+        },
+      );
+    });
+  });
 }
 
 /// Fresh GetIt per test (registerLazySingleton rejects re-registration on
