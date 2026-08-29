@@ -17,7 +17,7 @@
       limited) — FR-002.
 - [X] 1.2 [P] [U8] Add a test: `request()` on a scope currently `limited` returns
       it unchanged (no re-prompt) — FR-005/FR-002.
-- [ ] 1.3 [P] [U9] Add a test: `request()` on a scope currently `restricted`
+- [X] 1.3 [P] [U9] Add a test: `request()` on a scope currently `restricted`
       returns it unchanged (no re-prompt) — FR-005/FR-002.
 - [ ] 1.4 [P] [U10] Add a test: `check()` returns the explicitly set `limited` /
       `restricted` status — FR-002.

@@ -122,6 +122,15 @@ void main() {
       expect(await port.request('camera'), PermissionStatus.limited);
     });
 
+    test('a scope currently restricted is returned unchanged and not re-prompted '
+        '(FR-005)', () async {
+      final port = InMemoryPermissionAdapter()
+        ..setStatus('camera', PermissionStatus.restricted);
+      port.setPromptOutcome('camera', PermissionStatus.granted);
+
+      expect(await port.request('camera'), PermissionStatus.restricted);
+    });
+
     test('openSettings reports launchability', () async {
       final port = InMemoryPermissionAdapter();
       expect(await port.openSettings(), isTrue);
