@@ -19,7 +19,7 @@
       it unchanged (no re-prompt) — FR-005/FR-002.
 - [X] 1.3 [P] [U9] Add a test: `request()` on a scope currently `restricted`
       returns it unchanged (no re-prompt) — FR-005/FR-002.
-- [ ] 1.4 [P] [U10] Add a test: `check()` returns the explicitly set `limited` /
+- [X] 1.4 [P] [U10] Add a test: `check()` returns the explicitly set `limited` /
       `restricted` status — FR-002.
 - [ ] 1.5 [P] [U22] Add a test: `registerPermissionDependencies` also registers the
       permission-scope usecases (get/list/create) so they resolve from GetIt —

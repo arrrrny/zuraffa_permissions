@@ -131,6 +131,15 @@ void main() {
       expect(await port.request('camera'), PermissionStatus.restricted);
     });
 
+    test('check() returns an explicitly set limited or restricted status (FR-002)', () async {
+      final port = InMemoryPermissionAdapter();
+      port.setStatus('camera', PermissionStatus.limited);
+      expect(await port.check('camera'), PermissionStatus.limited);
+
+      port.setStatus('photos', PermissionStatus.restricted);
+      expect(await port.check('photos'), PermissionStatus.restricted);
+    });
+
     test('openSettings reports launchability', () async {
       final port = InMemoryPermissionAdapter();
       expect(await port.openSettings(), isTrue);

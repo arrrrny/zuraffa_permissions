@@ -49,7 +49,7 @@ Grouped by the component from the implementation that owns them.
 | U7  | `openSettings` reports whether settings could be launched                                        | FR-001     | example | DONE   | `test/permission_test.dart::openSettings reports launchability`                        |
 | U8  | `request` on a scope currently `limited` returns it unchanged (no re-prompt)                    | FR-002, FR-005 | example | DONE    | `test/permission_test.dart::in-memory adapter state machine (FR-006, FR-005) a scope currently limited is returned unchanged and not re-prompted (FR-005)` |
 | U9  | `request` on a scope currently `restricted` returns it unchanged (no re-prompt)                 | FR-002, FR-005 | example | DONE    | `test/permission_test.dart::in-memory adapter state machine (FR-006, FR-005) a scope currently restricted is returned unchanged and not re-prompted (FR-005)` |
-| U10 | `check` returns the explicitly set `limited` / `restricted` status                             | FR-002     | example | PENDING |                                                                                       |
+| U10 | `check` returns the explicitly set `limited` / `restricted` status                             | FR-002     | example | DONE    | `test/permission_test.dart::in-memory adapter state machine (FR-006, FR-005) check() returns an explicitly set limited or restricted status (FR-002)` |
 
 ### `lib/src/domain/entities/scopes/built_in_permission_scopes.dart` (FR-003)
 

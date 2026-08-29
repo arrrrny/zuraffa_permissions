@@ -45,5 +45,16 @@ existed and failed before the implementation.
   Mutant reverted; suite green again.
 - green: no implementation change required. Full suite `dart test` -> 16 passed, 0 failed.
 - refactor: none needed.
+- commit: 0116b30
+
+## Cycle 4: U10 — check() returns an explicitly set limited/restricted status (FR-002)
+
+- test: `test/permission_test.dart::in-memory adapter state machine (FR-006, FR-005) check() returns an explicitly set limited or restricted status (FR-002)` (new)
+- red: passed on first run — behavior already implemented (brownfield additive
+  coverage). Validated with a deliberate mutant: making `check` always return
+  `undetermined` (ignoring stored status) failed the test. Mutant reverted; suite
+  green again.
+- green: no implementation change required. Full suite `dart test` -> 17 passed, 0 failed.
+- refactor: none needed.
 - commit: <see below>
 
