@@ -47,7 +47,7 @@ Grouped by the component from the implementation that owns them.
 | U5  | Requesting a `permanentlyDenied` scope returns the status without re-prompting                  | FR-005     | example | DONE   | `test/permission_test.dart::permanently denied never re-prompts (FR-005)`              |
 | U6  | Already-decided scopes return their status unchanged on `request` (idempotent)                  | FR-005     | example | DONE   | `test/permission_test.dart::already-decided scopes return their status unchanged (idempotent requests)` |
 | U7  | `openSettings` reports whether settings could be launched                                        | FR-001     | example | DONE   | `test/permission_test.dart::openSettings reports launchability`                        |
-| U8  | `request` on a scope currently `limited` returns it unchanged (no re-prompt)                    | FR-002, FR-005 | example | PENDING |                                                                                       |
+| U8  | `request` on a scope currently `limited` returns it unchanged (no re-prompt)                    | FR-002, FR-005 | example | DONE    | `test/permission_test.dart::in-memory adapter state machine (FR-006, FR-005) a scope currently limited is returned unchanged and not re-prompted (FR-005)` |
 | U9  | `request` on a scope currently `restricted` returns it unchanged (no re-prompt)                 | FR-002, FR-005 | example | PENDING |                                                                                       |
 | U10 | `check` returns the explicitly set `limited` / `restricted` status                             | FR-002     | example | PENDING |                                                                                       |
 

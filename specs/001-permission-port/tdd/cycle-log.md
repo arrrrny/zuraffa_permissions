@@ -22,5 +22,17 @@ existed and failed before the implementation.
 - green: no implementation change required; the enum already exposes the six
   states. Full suite `dart test` -> 14 passed, 0 failed.
 - refactor: none needed.
+- commit: 7d06a4f
+
+## Cycle 2: U8 — request() on a `limited` scope returns it unchanged (FR-002/FR-005)
+
+- test: `test/permission_test.dart::in-memory adapter state machine (FR-006, FR-005) a scope currently limited is returned unchanged and not re-prompted (FR-005)` (new)
+- red: passed on first run — behavior already implemented (brownfield additive
+  coverage). Validated with a deliberate mutant: removing `limited` from the
+  adapter's idempotency guard (`current == PermissionStatus.limited`) let the scope
+  fall through to the prompt path and return `granted`; the test failed. Mutant
+  reverted; suite green again.
+- green: no implementation change required. Full suite `dart test` -> 15 passed, 0 failed.
+- refactor: none needed.
 - commit: <see below>
 

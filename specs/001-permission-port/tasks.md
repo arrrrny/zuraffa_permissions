@@ -15,7 +15,7 @@
 - [X] 1.1 [P] [U1] Add a test asserting `PermissionStatus` enumerates exactly the
       six states (granted, denied, permanentlyDenied, undetermined, restricted,
       limited) — FR-002.
-- [ ] 1.2 [P] [U8] Add a test: `request()` on a scope currently `limited` returns
+- [X] 1.2 [P] [U8] Add a test: `request()` on a scope currently `limited` returns
       it unchanged (no re-prompt) — FR-005/FR-002.
 - [ ] 1.3 [P] [U9] Add a test: `request()` on a scope currently `restricted`
       returns it unchanged (no re-prompt) — FR-005/FR-002.
