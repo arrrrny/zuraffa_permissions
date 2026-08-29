@@ -6,13 +6,13 @@
 
 ## Summary
 
-A pure-Dart `zuraffa_permissions` package: the permission layer of the Zuraffa ecosystem. A `PermissionPort` (check/request/openSettings) over typed `PermissionScope` entities with a `PermissionStatus` enum, a built-in scope registry (camera, photos, notifications, location, microphone, storage, biometrics, contacts, calendar, tracking), an in-memory default adapter (pure-Dart testable), and `registerPermissionDependencies` DI wiring. Platform adapters (Android/iOS/…) arrive later as federated siblings, mirroring zikzak_inappwebview's structure — this package is the contract they implement.
+A pure-Dart `zuraffa_permissions` package: the permission layer of the Zuraffa ecosystem. A `PermissionPort` (check/request/openSettings) over typed `PermissionScope` entities with a `PermissionStatus` enum, a built-in scope registry (camera, photos, notifications, locationWhenInUse, locationAlways, microphone, storage, biometrics, contacts, calendar, tracking), an in-memory default adapter (pure-Dart testable), and `registerPermissionDependencies` DI wiring. Platform adapters (Android/iOS/…) arrive later as federated siblings, mirroring zikzak_inappwebview's structure — this package is the contract they implement.
 
 ## Requirements
 
-- **FR-001**: `PermissionPort` MUST expose `check(scope)`, `request(scope)`, and `openSettings()` returning `Result`-shaped outcomes.
+- **FR-001**: `PermissionPort` MUST expose `check(scope)` returning `PermissionStatus`, `request(scope)` returning `PermissionRequestResult` (scope + status + requestedAt), and `openSettings()` returning `bool`.
 - **FR-002**: `PermissionStatus` MUST cover: `granted`, `denied`, `permanentlyDenied`, `undetermined`, `restricted`, `limited`.
-- **FR-003**: Ten built-in scopes MUST ship zero-config (camera, photos, notifications, locationWhenInUse, locationAlways, microphone, storage, biometrics, contacts, calendar).
+- **FR-003**: Eleven built-in scopes MUST ship zero-config (camera, photos, notifications, locationWhenInUse, locationAlways, microphone, storage, biometrics, contacts, calendar, tracking).
 - **FR-004**: Custom scopes MUST register through `PermissionScopeRegistry` (duplicate guard).
 - **FR-005**: Requesting a permanently-denied scope MUST NOT auto-prompt; it reports the status so the caller can decide to route to settings.
 - **FR-006**: The default adapter MUST be pure Dart (in-memory state machine) so the whole package tests without a platform.

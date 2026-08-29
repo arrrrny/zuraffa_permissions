@@ -73,3 +73,39 @@ existed and failed before the implementation.
   than editing the generated file).
 - commit: <see below>
 
+## Cycle 6: U24 — tracking is the 11th built-in scope (FR-003)
+
+- test: `test/permission_test.dart::built-in scopes (FR-003) tracking is the 11th built-in scope, registered zero-config (FR-003)` (new)
+- red: `dart test -n "tracking is the 11th"`
+  -> `Expected: true  Actual: <false>  tracking must ship built-in`
+  (the `tracking` field existed as a stub but was not yet in `BuiltInPermissionScopes.all`,
+  so `PermissionScopeRegistry.withBuiltIns()` did not contain it and `all` had length 10)
+- green: added `BuiltInPermissionScopes.tracking` (App Tracking Transparency, platformGroup
+  `privacy`) and appended it to `all`; updated the four built-in scope-count assertions
+  in `test/permission_test.dart` (10->11, 11->12, 11->12, 10->11) that the new scope
+  invalidated. Full suite `dart test` -> 19 passed, 0 failed.
+- refactor: none needed.
+- note: the single-test command matched nothing when given the full name with `(FR-003)`
+  because `package:test` parsed the parentheses as a regex group; a plain substring
+  (`tracking is the 11th`) matched. Recorded in the profile as the silent-exit caveat.
+- commit: not committed (no git mutation requested); changes left in the working tree.
+
+## Cycle 7: U23 — request returns PermissionRequestResult (FR-001)
+
+- test: `test/permission_test.dart::in-memory adapter state machine (FR-006, FR-005) request returns a PermissionRequestResult carrying scope, status, and requestedAt (FR-001)` (new)
+- red: `dart test -n "request returns a PermissionRequestResult"`
+  -> `Expected: a value greater than <0>  Actual: <0>` (the adapter stub returned
+  `requestedAt: 0`; the return type was already `PermissionRequestResult` so the
+  test compiled, but the timestamp was the stub value — a real assertion failure)
+- green: `InMemoryPermissionAdapter.request` now returns `PermissionRequestResult(
+  scope: scope, status: resolved, requestedAt: DateTime.now().millisecondsSinceEpoch)`.
+  `PermissionPort.request` and `PermissionService.request` signatures changed from
+  `Future<PermissionStatus>` to `Future<PermissionRequestResult>`. The 8 existing
+  request-path assertions (U3, U4, U5, U6, U8, U9, U17) were adapted from a raw
+  `PermissionStatus` expectation to `(await ...).status`. Full suite `dart test`
+  -> 20 passed, 0 failed.
+- refactor: none needed; the status-resolution branch is unchanged, only wrapped.
+- note: breaking contract change. `check` still returns `PermissionStatus` and
+  `openSettings` still returns `bool`, per the resolved FR-001 (clarification 2.1).
+- commit: not committed (no git mutation requested); changes left in the working tree.
+

@@ -1,4 +1,5 @@
 import '../../domain/entities/enums/permission_status.dart';
+import '../../domain/entities/permission_request_result/permission_request_result.dart';
 import '../../domain/permission/permission_port.dart';
 
 /// Pure-Dart default adapter (FR-006): an in-memory permission state
@@ -48,26 +49,30 @@ class InMemoryPermissionAdapter implements PermissionPort {
   }
 
   @override
-  Future<PermissionStatus> request(String scope) async {
+  Future<PermissionRequestResult> request(String scope) async {
     final current = await check(scope);
+    PermissionStatus resolved;
     // Permanently denied never re-prompts (FR-005) — the OS would not show
     // a dialog either; the caller routes to settings.
     if (current == PermissionStatus.permanentlyDenied) {
-      return current;
-    }
-    // Already decided: return as-is (idempotent request).
-    if (current == PermissionStatus.granted ||
+      resolved = current;
+    } else if (current == PermissionStatus.granted ||
         current == PermissionStatus.denied ||
         current == PermissionStatus.limited ||
         current == PermissionStatus.restricted) {
-      return current;
+      // Already decided: return as-is (idempotent request).
+      resolved = current;
+    } else {
+      // Undetermined: the "prompt". Resolve with the prepared outcome,
+      // defaulting to granted (an optimistic in-memory default).
+      resolved = _nextPromptOutcome.remove(scope) ?? PermissionStatus.granted;
+      _status[scope] = resolved;
     }
-    // Undetermined: the "prompt". Resolve with the prepared outcome,
-    // defaulting to granted (an optimistic in-memory default).
-    final outcome =
-        _nextPromptOutcome.remove(scope) ?? PermissionStatus.granted;
-    _status[scope] = outcome;
-    return outcome;
+    return PermissionRequestResult(
+      scope: scope,
+      status: resolved,
+      requestedAt: DateTime.now().millisecondsSinceEpoch,
+    );
   }
 
   @override

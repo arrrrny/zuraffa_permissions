@@ -1,6 +1,5 @@
 import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 
-import 'method_channel_zuraffa_permissions.dart';
 import 'permission_platform_interface.dart';
 
 /// Bridges the [ZuraffaPermissionsPlatform] native implementation onto
@@ -33,9 +32,13 @@ class MethodChannelPermissionAdapter implements PermissionPort {
   }
 
   @override
-  Future<PermissionStatus> request(String scope) async {
+  Future<PermissionRequestResult> request(String scope) async {
     final statuses = await platform.requestPermissions([scope]);
-    return _toStatus(statuses[scope]);
+    return PermissionRequestResult(
+      scope: scope,
+      status: _toStatus(statuses[scope]),
+      requestedAt: DateTime.now().millisecondsSinceEpoch,
+    );
   }
 
   @override

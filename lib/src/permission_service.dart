@@ -2,6 +2,7 @@ import 'package:zuraffa/zuraffa.dart';
 
 import 'data/permission/in_memory_permission_adapter.dart';
 import 'domain/entities/enums/permission_status.dart';
+import 'domain/entities/permission_request_result/permission_request_result.dart';
 import 'domain/entities/permission_scope/permission_scope.dart';
 import 'domain/entities/scopes/built_in_permission_scopes.dart';
 
@@ -78,7 +79,7 @@ class PermissionService {
 
   /// Requests [scopeId]; an unknown scope is a typed error (a typo in
   /// your own scope wiring should fail fast, not silently "succeed").
-  Future<PermissionStatus> request(String scopeId) {
+  Future<PermissionRequestResult> request(String scopeId) {
     if (!registry.contains(scopeId)) {
       throw ZuraffaSessionException(
         'unknown_scope',
@@ -95,6 +96,27 @@ class PermissionService {
   Iterable<PermissionScope> get scopes => registry.all;
 }
 
+/// Optional factory installed by a federated platform package so apps get
+/// real OS permissions without wiring the adapter by hand.
+///
+/// `zuraffa_permissions_android` / `_ios` / `_macos` call
+/// [setPlatformPermissionPortFactory] from their `registerWith()` (which Flutter
+/// runs when the app starts). Until one does, the package stays pure Dart and
+/// defaults to [InMemoryPermissionAdapter] — so it tests without a platform
+/// (FR-006) and consumers can still inject a custom [PermissionPort].
+PermissionPort? Function()? _platformPortFactory;
+
+/// Called by a platform package at registration time to supply the real
+/// [PermissionPort] (bridged onto its native [ZuraffaPermissionsPlatform]).
+void setPlatformPermissionPortFactory(PermissionPort Function() factory) {
+  _platformPortFactory = factory;
+}
+
+/// The default [PermissionPort] when the caller injects none: the platform
+/// package's real adapter if one registered, otherwise the in-memory default.
+PermissionPort _defaultPermissionPort() =>
+    _platformPortFactory?.call() ?? InMemoryPermissionAdapter();
+
 /// Registers the permission stack onto [getIt] (FR-007).
 ///
 /// ```dart
@@ -109,7 +131,7 @@ void registerPermissionDependencies(
 }) {
   getIt
     ..registerLazySingleton<PermissionPort>(
-      () => port ?? InMemoryPermissionAdapter(),
+      () => port ?? _defaultPermissionPort(),
     )
     ..registerLazySingleton<PermissionScopeRegistry>(
       () => registry ?? PermissionScopeRegistry.withBuiltIns(),

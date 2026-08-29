@@ -27,14 +27,41 @@
 
 ## Phase 2 — Resolve spec/impl clarifications before asserting
 
-- [ ] 2.1 [P] Confirm FR-001: must `PermissionPort` return "Result-shaped" outcomes,
-      or is raw `PermissionStatus` (current behavior) correct? Decide before
-      adding/keeping an assertion.
-- [ ] 2.2 [P] Confirm the built-in set: the spec summary lists a `tracking` scope
-      not present in FR-003's ten. Decide the intended built-ins.
+- [X] 2.1 [P] Confirm FR-001: decided — `check` → `PermissionStatus`, `request` →
+      `PermissionRequestResult` (scope + status + requestedAt), `openSettings` →
+      `bool`. Captured as behavior `U23`.
+- [X] 2.2 [P] Confirm the built-in set: decided — `tracking` is the 11th built-in
+      scope (FR-003 + Summary updated). Captured as behavior `U24`.
 
 ## Phase 3 — Gate
 
-- [ ] 3.1 Run `dart test` and confirm the full suite is green (13 existing + the new
-      gap tests) before considering the feature complete. (Inside-out library, so
+- [ ] 3.1 Run `dart test` and confirm the full suite is green (18 existing + the new
+      change tests) before considering the feature complete. (Inside-out library, so
       there is no separate outer-loop acceptance test to gate on.)
+
+## Phase 4 — Apply the two resolved spec changes (tests first)
+
+- [X] 4.1 [P] [U24] Add `tracking` as the 11th built-in `PermissionScope` in
+      `BuiltInPermissionScopes` (and its `all` list); update the built-in count
+      assertions in the tests from ten to eleven — FR-003.
+- [X] 4.2 [P] [U23] Change `PermissionPort.request` (and `InMemoryPermissionAdapter`
+      / `PermissionService`) to return `PermissionRequestResult` (scope + status +
+      requestedAt); adapt the existing request-path tests (U3, U4, U5, U6, U8, U9,
+      U17) to assert the new return type instead of raw `PermissionStatus` — FR-001.
+
+## Phase 5 — TDD remediation (from /speckit.tdd.verify, PASS_WITH_GAPS)
+
+Non-blocking quality improvements surfaced by the audit. The feature is complete;
+these raise two tests to the standard their siblings already meet.
+
+- [ ] 5.1 [P] Fix the misleading test name "all ten built-ins are registered with
+      zero configuration" (it actually asserts 11 ids and `hasLength(11)`). Rename
+      to reflect the eleven built-ins, and align the stale "the ten built-ins"
+      comments at `built_in_permission_scopes.dart:3` and `permission_service.dart:17`.
+      Proof: `dart test -n "all eleven built-ins are registered with zero configuration"`
+      passes and `grep -rn "ten built-ins"` finds no stale references. (Finding #1)
+- [ ] 5.2 [P] Strengthen `test/permission_test.dart:42` from
+      `BuiltInPermissionScopes.tracking.platformGroup isNotNull` to the concrete
+      `equals('privacy')`, matching the camera check at line 30. Proof:
+      `dart test -n "tracking is the 11th built-in scope, registered zero-config"`
+      passes. (Finding #2, borderline vacuous assertion)

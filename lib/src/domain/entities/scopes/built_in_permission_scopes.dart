@@ -83,6 +83,14 @@ abstract final class BuiltInPermissionScopes {
     platformGroup: 'productivity',
   );
 
+  /// App Tracking Transparency (cross-app user tracking).
+  static final PermissionScope tracking = PermissionScope(
+    id: 'tracking',
+    name: 'tracking',
+    description: 'Track user activity across apps and websites.',
+    platformGroup: 'privacy',
+  );
+
   /// All built-ins in registration order.
   static final List<PermissionScope> all = [
     camera,
@@ -95,5 +103,6 @@ abstract final class BuiltInPermissionScopes {
     biometrics,
     contacts,
     calendar,
+    tracking,
   ];
 }

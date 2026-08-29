@@ -16,3 +16,10 @@ zuraffa_permissions_ios/.dart_tool/
 zuraffa_permissions_ios/.flutter-plugins*
 zuraffa_permissions_macos/.dart_tool/
 zuraffa_permissions_macos/.flutter-plugins*
+
+# Test/coverage and mutation reports
+coverage/
+mutation-test-report/
+
+# Agent working directory
+.kimi-code/

@@ -1,4 +1,5 @@
 import '../entities/enums/permission_status.dart';
+import '../entities/permission_request_result/permission_request_result.dart';
 
 /// The technology-agnostic permission contract (FR-001).
 ///
@@ -15,7 +16,7 @@ abstract class PermissionPort {
   /// - `granted`/`denied` → returns the current status unchanged.
   /// - `permanentlyDenied` → returns the status WITHOUT prompting (FR-005);
   ///   the caller decides whether to route the user to [openSettings].
-  Future<PermissionStatus> request(String scope);
+  Future<PermissionRequestResult> request(String scope);
 
   /// Opens the OS settings page where the user can change permissions.
   /// Returns whether settings could be launched at all.

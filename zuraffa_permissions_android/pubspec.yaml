@@ -19,6 +19,8 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
+  zuraffa_permissions:
+    path: ../
   zuraffa_permissions_platform_interface:
     path: ../zuraffa_permissions_platform_interface
 
