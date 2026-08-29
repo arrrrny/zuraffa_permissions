@@ -5,7 +5,11 @@ import 'domain/entities/enums/permission_status.dart';
 import 'domain/entities/permission_scope/permission_scope.dart';
 import 'domain/entities/scopes/built_in_permission_scopes.dart';
 
+import 'data/datasources/permission_scope/permission_scope_remote_datasource.dart';
+import 'data/repositories/data_permission_scope_repository.dart';
+import 'di/index.dart';
 import 'domain/permission/permission_port.dart';
+import 'domain/repositories/permission_scope_repository.dart';
 
 export 'domain/permission/permission_port.dart';
 
@@ -115,5 +119,10 @@ void registerPermissionDependencies(
         port: getIt<PermissionPort>(),
         registry: getIt<PermissionScopeRegistry>(),
       ),
+    )
+    // FR-007: also wire the permission-scope use cases and their repository.
+    ..registerLazySingleton<PermissionScopeRepository>(
+      () => DataPermissionScopeRepository(getIt<PermissionScopeRemoteDataSource>()),
     );
+  setupDependencies(getIt);
 }

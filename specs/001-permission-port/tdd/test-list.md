@@ -76,7 +76,7 @@ Grouped by the component from the implementation that owns them.
 | U19  | `service.scopes` surfaces built-in and custom metadata                                         | FR-001, FR-004 | example | DONE    | `test/permission_test.dart::scopes surface built-in and custom metadata`               |
 | U20  | `registerPermissionDependencies` wires port + registry + service onto GetIt                    | FR-007     | example | DONE    | `test/permission_test.dart::registerPermissionDependencies wires the stack onto GetIt`  |
 | U21  | DI honors an injected custom adapter                                                          | FR-007     | example | DONE    | `test/permission_test.dart::DI honors an injected custom adapter`                      |
-| U22  | `registerPermissionDependencies` also registers the permission-scope usecases (get/list/create) so they resolve from GetIt | FR-007 | example | PENDING |                                                                                       |
+| U22  | `registerPermissionDependencies` also registers the permission-scope usecases (get/list/create) so they resolve from GetIt | FR-007 | example | DONE    | `test/permission_test.dart::PermissionService (FR-001/FR-007) registerPermissionDependencies also wires the permission-scope use cases (FR-007)` |
 
 ## Invariants and edge cases still to place
 

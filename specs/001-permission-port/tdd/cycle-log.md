@@ -56,5 +56,20 @@ existed and failed before the implementation.
   green again.
 - green: no implementation change required. Full suite `dart test` -> 17 passed, 0 failed.
 - refactor: none needed.
+- commit: b412ff9
+
+## Cycle 5: U22 — registerPermissionDependencies also wires the permission-scope use cases (FR-007)
+
+- test: `test/permission_test.dart::PermissionService (FR-001/FR-007) registerPermissionDependencies also wires the permission-scope use cases (FR-007)` (new)
+- red: `dart test -n "registerPermissionDependencies also wires the permission-scope use cases"`
+  -> `getIt<GetPermissionScopeListUseCase>()` threw "Object/factory not registered"
+  (the use cases and their repository were never wired by `registerPermissionDependencies`).
+- green: `registerPermissionDependencies` now also registers `PermissionScopeRepository`
+  (-> `DataPermissionScopeRepository` over the remote data source) and calls
+  `setupDependencies(getIt)` to register the three use cases and the data source.
+  Full suite `dart test` -> 18 passed, 0 failed.
+- refactor: none needed (the missing repository registration was a latent gap in the
+  generated `setupDependencies`; fixed in the hand-written DI entry point rather
+  than editing the generated file).
 - commit: <see below>
 

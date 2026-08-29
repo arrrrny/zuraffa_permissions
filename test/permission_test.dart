@@ -1,6 +1,9 @@
 import 'package:test/test.dart';
 import 'package:zuraffa/zuraffa.dart' show GetIt, ZuraffaSessionException;
 import 'package:zuraffa_permissions/zuraffa_permissions.dart';
+import 'package:zuraffa_permissions/src/domain/usecases/permission_scope/create_permission_scope_usecase.dart';
+import 'package:zuraffa_permissions/src/domain/usecases/permission_scope/get_permission_scope_usecase.dart';
+import 'package:zuraffa_permissions/src/domain/usecases/permission_scope/get_permission_scope_list_usecase.dart';
 
 /// Spec `001-permission-port` — the port contract, the registry, the
 /// service, and the in-memory adapter's state machine (all pure Dart).
@@ -208,6 +211,25 @@ void main() {
 
       final service = getIt<PermissionService>();
       expect(await service.check('calendar'), PermissionStatus.granted);
+    });
+
+    test('registerPermissionDependencies also wires the permission-scope use cases '
+        '(FR-007)', () async {
+      final getIt = getItForTest();
+      registerPermissionDependencies(getIt);
+
+      expect(
+        getIt<GetPermissionScopeListUseCase>(),
+        isA<GetPermissionScopeListUseCase>(),
+      );
+      expect(
+        getIt<GetPermissionScopeUseCase>(),
+        isA<GetPermissionScopeUseCase>(),
+      );
+      expect(
+        getIt<CreatePermissionScopeUseCase>(),
+        isA<CreatePermissionScopeUseCase>(),
+      );
     });
   });
 
