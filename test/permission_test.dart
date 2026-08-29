@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:zuraffa/zuraffa.dart' show GetIt, ZuraffaSessionException;
+import 'package:zuraffa/zuraffa.dart' show GetIt, ZuraffaPlatformException;
 import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 import 'package:zuraffa_permissions/src/domain/usecases/permission_scope/create_permission_scope_usecase.dart';
 import 'package:zuraffa_permissions/src/domain/usecases/permission_scope/get_permission_scope_usecase.dart';
@@ -68,7 +68,7 @@ void main() {
           ),
         ),
         throwsA(
-          isA<ZuraffaSessionException>().having(
+          isA<ZuraffaPlatformException>().having(
             (e) => e.code,
             'code',
             'duplicate_scope',
@@ -185,7 +185,7 @@ void main() {
       expect(
         () => service.request('telepathy'),
         throwsA(
-          isA<ZuraffaSessionException>().having(
+          isA<ZuraffaPlatformException>().having(
             (e) => e.code,
             'code',
             'unknown_scope',

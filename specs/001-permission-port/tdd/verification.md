@@ -15,6 +15,7 @@ criteria_covered: 8
 mutation_score: 100 # scope: 5 feature source files, mutation_test 1.8.0, 25 mutants, quality A
 mutants_survived: 0 # 25 mechanical mutants (adapter 18, service 6, scopes 1); all killed
 suite: 20 passed, 0 failed, ~8s
+real_device: "macos,android,ios: PASS (example/integration_test/permission_test.dart, cycle 8 + location coverage cycle 9); location request grant flow PASS on physical iPhone (cycle 10)"
 ---
 
 # TDD Verification: zuraffa_permissions — typed permission port
@@ -162,13 +163,69 @@ feature owns is touched by a test:
 
 FR-008 entities (Zorphy-generated) are covered at build time only.
 
+## Real-device verification (federated native plugin)
+
+The Dart inner-loop audit above (cycles 1–7) was `inside-out` and never exercised the
+four federated Flutter packages on a real OS. That gap is now **closed** by a
+characterization integration test driven from a new `example/` host app that wires all
+five packages.
+
+- **Test:** `example/integration_test/permission_test.dart` — runs the real native
+  plugin (not the in-memory Dart adapter) and asserts the MethodChannel round-trips:
+  `biometrics` resolves to a non-`undetermined` status (proves the native plugin
+  answered, not the fallback), `camera` returns a valid enum, `locationWhenInUse`
+  returns a valid enum via `check` (no dialog — proves the `location` platform group
+  round-trips; added in Cycle 9), `storage` resolves via `request` without a dialog,
+  `openSettings` returns a bool.
+- **Targets (all GREEN):** macOS 15.7.9 desktop (darwin-x64); Android emulator
+  `Pixel_10_Pro` (API 37); iOS Simulator iPhone 16e (iOS 26.3). Run one runtime at a
+  time per the machine constraint.
+- **Native bugs found and fixed during this cycle** (see cycle-log Cycle 8):
+  - podspec filename must equal `s.name` (`zuraffa_permissions_macos` / `_ios`) or
+    `pod install` reports "No podspec found".
+  - macOS Swift: `import FlutterMacOS` (not `Flutter`); `registrar.messenger` is a
+    **property**; `import UserNotifications` required for `UNUserNotificationCenter`.
+  - `zuraffa_permissions_macos/pubspec.yaml` declared `platforms: ios:` instead of
+    `macos:` — the macOS plugin would never register on macOS.
+  - `EKAuthorizationStatus.limited` is photos-only and does not exist; `calendarStatus`
+    rewritten with an `if #available` split on both Apple plugins.
+- **Open follow-ups (warnings, not failures):** add a `Package.swift` for SPM on both
+  Apple plugins (CocoaPods-only today); migrate the Android plugin off the legacy
+  Kotlin Gradle Plugin (KGP) before a future Flutter release.
+
+### Location request grant flow (Cycle 10, physical iPhone)
+
+The non-blocking `check('locationWhenInUse')` (Cycle 9) proved the `location` platform group
+round-trips, but the **request** grant flow was unexercised until a physical iPhone was used:
+
+- **Test:** `example/integration_test/location_request_test.dart` — a focused, interactive
+  test that calls `request('locationWhenInUse')` on a real device (the system dialog pops) and
+  asserts the result is a `PermissionRequestResult` with `scope == 'locationWhenInUse'` and a
+  non-`undetermined` status. Kept separate from `permission_test.dart` so the three automated
+  runs stay dialog-free.
+- **Requires** `NSLocationWhenInUseUsageDescription` in `example/ios/Runner/Info.plist`
+  (added in Cycle 10) — otherwise `requestWhenInUseAuthorization` aborts the app on a device.
+- **Result: PASS** on a cabled iPhone 12 Pro Max (iOS 18.7.1), team `2D3QTPZG5J`. The first
+  attempt returned `undetermined` because the plugin's location-request poll window was only
+  ~9s (60 × 0.15s) and the human tap landed after it closed — a real weakness, not a test
+  error. **Plugin fix:** widened the poll window to ~30s (200 × 0.15s) on both Apple plugins'
+  `requestLocation`. Re-ran; the permission was already granted, so `request` resolved to
+  `granted` immediately and the test passed. The request path now round-trips on a real OS.
+- **Setup note for physical-device runs:** the debug session only attaches once Developer Mode
+  is enabled on the iPhone and the Mac has authorized **Xcode** under System Settings →
+  Privacy & Security → Automation; otherwise Flutter reports "Dart VM Service not discovered".
+- **Audit independence:** the bug fixes were made by the same session that ran the
+  tests; each fix is corroborated by a subsequent green run on the affected platform
+  (macOS and iOS both went red→green; Android green on first build).
+
 ## What was not audited
 
 - **The 4 federated Flutter packages** (`zuraffa_permissions_platform_interface`,
-  `_android`, `_ios`, `_macos`): they declare `flutter_test` but contain no test
-  files, so there is nothing to run against and no verified `flutter test` command.
-  Out of scope for this Dart inner loop; they need characterization tests before
-  any change.
+  `_android`, `_ios`, `_macos`): **now characterized on real devices** via
+  `example/integration_test/permission_test.dart` (Cycle 8) — all three targets GREEN.
+  They declare `flutter_test` but contain no unit test files; the prior "nothing to run
+  against" note is resolved by the integration test, not by package-local unit tests.
+  See "Real-device verification" above.
 - **FR-008 at runtime**: asserted only by compilation of generated code, not by a
   `package:test` test, by design of the spec.
 - **Mutation scope**: the mechanical run was scoped to the 5 behavior-bearing

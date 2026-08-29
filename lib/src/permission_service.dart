@@ -33,13 +33,13 @@ class PermissionScopeRegistry {
   factory PermissionScopeRegistry.withBuiltIns() => PermissionScopeRegistry();
 
   /// Registers a custom scope; duplicate ids are rejected with a typed
-  /// [ZuraffaSessionException]-style error so one domain cannot silently
+  /// [ZuraffaPlatformException]-style error so one domain cannot silently
   /// shadow another's scope.
   void register(PermissionScope scope) {
     if (_scopes.containsKey(scope.id)) {
-      throw ZuraffaSessionException(
-        'duplicate_scope',
-        'A permission scope "${scope.id}" is already registered.',
+      throw ZuraffaPlatformException(
+        code: 'duplicate_scope',
+        message: 'A permission scope "${scope.id}" is already registered.',
       );
     }
     _scopes[scope.id] = scope;
@@ -81,9 +81,9 @@ class PermissionService {
   /// your own scope wiring should fail fast, not silently "succeed").
   Future<PermissionRequestResult> request(String scopeId) {
     if (!registry.contains(scopeId)) {
-      throw ZuraffaSessionException(
-        'unknown_scope',
-        'No permission scope registered under "$scopeId".',
+      throw ZuraffaPlatformException(
+        code: 'unknown_scope',
+        message: 'No permission scope registered under "$scopeId".',
       );
     }
     return port.request(scopeId);

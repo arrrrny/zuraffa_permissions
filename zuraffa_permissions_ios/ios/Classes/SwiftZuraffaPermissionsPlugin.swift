@@ -263,8 +263,10 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
     completion: @escaping (String) -> Void
   ) {
     // CLLocationManager's requestWhenInUseAuthorization does not offer a
-    // completion; the standard workaround polls the status a bounded
-    // number of times for the state change.
+    // completion; the standard workaround polls the status for the state
+    // change. The window is ~30s (200 × 0.15s) so a real user has time to
+    // read and respond to the system dialog — a 9s window is too short and
+    // would wrongly report undetermined for a slow tapper.
     let manager = CLLocationManager()
     let status = locationStatus(always: always)
     if status != undetermined {
@@ -277,7 +279,7 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
         attempts += 1
         let current = self.locationStatus(always: always)
-        if current != self.undetermined || attempts >= 60 {
+        if current != self.undetermined || attempts >= 200 {
           completion(self.escalate(status: current))
         } else {
           poll()
@@ -321,13 +323,24 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
   // MARK: - Calendar
 
   private func calendarStatus() -> String {
-    switch EKEventStore.authorizationStatus(for: .event) {
-    case .authorized, .fullAccess: return granted
-    case .writeOnly, .limited: return limited
-    case .notDetermined: return undetermined
-    case .denied: return denied
-    case .restricted: return restricted
-    @unknown default: return undetermined
+    let status = EKEventStore.authorizationStatus(for: .event)
+    if #available(iOS 17.0, *) {
+      switch status {
+      case .authorized, .fullAccess: return granted
+      case .writeOnly: return limited
+      case .notDetermined: return undetermined
+      case .denied: return denied
+      case .restricted: return restricted
+      @unknown default: return undetermined
+      }
+    } else {
+      switch status {
+      case .authorized: return granted
+      case .notDetermined: return undetermined
+      case .denied: return denied
+      case .restricted: return restricted
+      @unknown default: return undetermined
+      }
     }
   }
 

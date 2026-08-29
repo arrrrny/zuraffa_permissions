@@ -1,5 +1,5 @@
 name: zuraffa_permissions_macos
-description: The iOS implementation of zuraffa_permissions (AVFoundation/Photos/CoreLocation/UNUserNotificationCenter).
+description: The macOS implementation of zuraffa_permissions (AVFoundation/Photos/CoreLocation/UNUserNotificationCenter).
 version: 0.1.0
 publish_to: none
 
@@ -11,7 +11,7 @@ flutter:
   plugin:
     implements: zuraffa_permissions
     platforms:
-      ios:
+      macos:
         pluginClass: ZuraffaPermissionsPlugin
         dartPluginClass: ZuraffaPermissionsMacOS
 

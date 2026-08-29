@@ -109,3 +109,139 @@ existed and failed before the implementation.
   `openSettings` still returns `bool`, per the resolved FR-001 (clarification 2.1).
 - commit: not committed (no git mutation requested); changes left in the working tree.
 
+## Cycle 8: Real-device characterization of the federated native plugin (macOS, Android, iOS)
+
+- test: `example/integration_test/permission_test.dart` (new) — drives the **real**
+  native plugin (not the in-memory Dart adapter) on a physical OS and proves the
+  MethodChannel round-trips: `biometrics` must resolve to a non-`undetermined`
+  status (proves the native plugin answered, not the fallback), `camera` returns a
+  valid enum, `storage` resolves via `request` without popping a dialog, `openSettings`
+  returns a bool.
+- env: 2019 Intel Mac (darwin-x64, macOS 15.7.9); Android emulator `Pixel_10_Pro`
+  (Android 17 / API 37); iOS Simulator iPhone 16e (iOS 26.3). Run one runtime at a
+  time per the machine constraint (emulator and simulator never up together).
+- host: a new `example/` Flutter app wires all five packages
+  (`zuraffa_permissions` + `_platform_interface` + `_android` + `_ios` + `_macos`).
+
+### macOS (desktop) — red → green
+
+- red: `flutter test -d macos` failed to build. Distinct native issues surfaced:
+  1. `pod install` → `No podspec found for zuraffa_permissions_macos`. Root cause:
+     the macOS podspec file was `zuraffa_permissions.podspec` while its `s.name` is
+     `zuraffa_permissions_macos`; CocoaPods requires the filename to equal `s.name`.
+     Renamed `macos/zuraffa_permissions.podspec` → `zuraffa_permissions_macos.podspec`
+     (and the iOS twin `ios/zuraffa_permissions.podspec` → `zuraffa_permissions_ios.podspec`).
+  2. macOS Swift source `import Flutter` unresolved — macOS imports `FlutterMacOS`,
+     not `Flutter`. Type names are otherwise identical, so only the import line changed.
+  3. `registrar.messenger()` — on macOS `FlutterPluginRegistrar.messenger` is a
+     **property**, not a method. Changed to `registrar.messenger`.
+  4. `UNUserNotificationCenter` not in scope — added `import UserNotifications`
+     (AppKit does not transitively expose it on macOS the way UIKit does on iOS).
+  5. `EKAuthorizationStatus.limited` does not exist — that value is photos-only.
+     Rewrote `calendarStatus` with an `if #available(macOS 14.0, *)` split.
+- pre-cycle fix: `zuraffa_permissions_macos/pubspec.yaml` declared `platforms: ios:`
+  instead of `macos:`; corrected so the macOS plugin actually registers on macOS.
+- green: `flutter test -d macos` → `All tests passed!` Native plugin live, channel round-trips.
+
+### Android (Pixel emulator) — green (with migration warning)
+
+- green: `flutter test -d emulator-5554` → `All tests passed!`
+- note (not a failure): build warns the Android plugin still applies the legacy
+  Kotlin Gradle Plugin (KGP). Future Flutter versions will fail to build until the
+  plugin migrates to Built-in Kotlin. Recorded as a follow-up, not a test break.
+
+### iOS (simulator) — red → green
+
+- red: `flutter test -d <iPhone 16e>` failed to build —
+  `EKAuthorizationStatus has no member 'limited'` at
+  `ios/Classes/SwiftZuraffaPermissionsPlugin.swift:325`. Same photos-vs-calendar
+  mistake as macOS; fixed `calendarStatus` with an `if #available(iOS 17.0, *)` split.
+- green: `flutter test -d <iPhone 16e>` → `All tests passed!`
+
+### Known benign warnings (do not block any run)
+
+- "plugins do not support Swift Package Manager" (macOS + iOS): the plugins ship a
+  CocoaPods podspec and no `Package.swift`; works today, becomes an error in a future
+  Flutter. Future work: add a `Package.swift` (SPM) for both Apple plugins.
+- KGP warning on Android (above).
+- "switch must be exhaustive" on the calendar `#available` split — Swift analyzer
+  quirk; the switch is exhaustive via `@unknown default`.
+- "Failed to foreground app; open returned 1" on macOS — test-runner only.
+
+### Incident (contained)
+
+- A stray `flutter create .` was run from the **repo root** instead of `example/`,
+  scaffolding a spurious Flutter app at the plugin root (`lib/main.dart`, `macos/`,
+  `test/widget_test.dart`, `.metadata`, `.idea/`). Removed all of them; no tracked
+  source was clobbered (`lib/src`, `lib/zuraffa_permissions.dart`,
+  `test/permission_test.dart` intact). The macOS `Podfile` was then supplied from
+  Flutter's template and `pod install` run in `example/macos`.
+
+### Result
+
+- All three real runtimes GREEN. Closes the verification.md "not audited" gap for the
+  four federated packages (native plugin behavior is now characterized on every target).
+- recorded: 2026-08-29. Not committed (no git mutation requested).
+
+## Cycle 9: Location scope coverage on real runtimes (locationWhenInUse)
+
+- test: `example/integration_test/permission_test.dart` — added a non-blocking
+  `await service.check('locationWhenInUse')` assertion beside `camera`: the result must
+  be one of `PermissionStatus.values`. `locationWhenInUse` is a built-in scope with
+  platformGroup `location`; `check` (not `request`) is used deliberately so no native
+  permission dialog pops on any runtime. This proves the MethodChannel carries the
+  location platform group end-to-end, which Cycle 8 left unexercised.
+- red: N/A as a code failure — the native plugins already handled the `location` group
+  on all three platforms (confirmed by reading `SwiftZuraffaPermissionsPlugin.swift`
+  (iOS `locationStatus`, macOS `locationStatus`) and `ZuraffaPermissionsPlugin.kt`
+  (`"locationWhenInUse" -> ACCESS_COARSE/FINE_LOCATION`)). This is additive coverage,
+  like the brownfield U1–U4 cycles, not a new behavior.
+- green: `dart` host change only — no native source edited. Re-ran the full integration
+  test on all three runtimes, one at a time:
+  - macOS (desktop): `flutter test -d macos` → `All tests passed!` (incl. location).
+  - Android (Pixel_10_Pro, `emulator-5554`): first attempt was run from the **repo root**
+    by mistake (`flutter test integration_test/…` with no `cd example`), which reported
+    `cannot run without a dependency on "package:integration_test"` because the root
+    package has no such dev_dependency. Fixed by running from `example/` (after a `flutter
+    pub get`); `flutter test -d emulator-5554` → `All tests passed!` (incl. location).
+    Emulator was shut down before the iOS leg; simulator was already down for the Android leg.
+  - iOS (iPhone 16e, `38AC6290-…`): `flutter test -d <udid>` → `All tests passed!`
+    (incl. location). No `NSLocationWhenInUseUsageDescription` key is needed because the
+    test only calls `authorizationStatus()` (a `check`), which does not prompt; the key is
+    only required for `request…Authorization`, which the test never invokes.
+- note: example `iOS/Runner/Info.plist` still lacks a location usage key; harmless for a
+  `check`-only test, but add `NSLocationWhenInUseUsageDescription` if a future test calls
+  `request('locationWhenInUse')` (it would crash without the key).
+- recorded: 2026-08-29. Not committed (no git mutation requested).
+
+## Cycle 10: Location **request** grant flow on a physical iPhone
+
+- test: `example/integration_test/location_request_test.dart` (new, focused) — drives the
+  real native plugin on a physical iPhone and calls `request('locationWhenInUse')`, which
+  pops the system "Allow location while using the app" dialog. Asserts the result is a
+  `PermissionRequestResult` with `scope == 'locationWhenInUse'` and
+  `status != undetermined` (the signal the grant flow actually round-tripped). Kept separate
+  from `permission_test.dart` so the automated macOS/Android/simulator runs stay dialog-free.
+- env: physical iPhone 12 Pro Max (iOS 18.7.1), cabled, Developer Mode ON, team
+  `2D3QTPZG5J` (Automatic signing). Run one runtime at a time; no simulator/emulator up.
+- pre-req (code): added `NSLocationWhenInUseUsageDescription` to `example/ios/Runner/Info.plist`
+  — without it, `requestWhenInUseAuthorization` aborts the app on a real device. (Closes the
+  Cycle 9 follow-up note.)
+- red (run 1): `flutter test -d 00008101-…` built + launched, the dialog appeared and the
+  user tapped Allow, but `request` returned `undetermined` and the assertion failed. Root
+  cause: the iOS plugin's `requestLocation` polled only `attempts >= 60` (60 × 0.15s ≈ 9s);
+  the human tap landed after the window closed, so the future resolved `undetermined`. A 9s
+  window for a permission dialog is a genuine plugin weakness — a slow real user would get a
+  wrong `undetermined`.
+- green (plugin fix): widened the location-request poll window on **both** Apple plugins
+  (`SwiftZuraffaPermissionsPlugin.swift` iOS, `SwiftZuraffaPermissionsPlugin.swift` macOS)
+  from `attempts >= 60` to `attempts >= 200` (≈30s). Re-ran: the permission was already
+  granted from run 1, so `request` resolved to `granted` immediately (no dialog) and the test
+  passed — `All tests passed!`
+- env caveat (debug attach): the first attempt also failed earlier with "Dart VM Service was
+  not discovered after 60 seconds". Once the user confirmed Developer Mode was on and the Mac
+  authorized **Xcode** under System Settings → Privacy & Security → Automation, the debug
+  session attached and the test executed. Recorded so the next physical-device run skips the
+  false start.
+- recorded: 2026-08-29. Not committed (no git mutation requested).
+

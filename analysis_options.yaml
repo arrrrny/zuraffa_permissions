@@ -7,3 +7,10 @@ analyzer:
     - zuraffa_permissions_android/**
     - zuraffa_permissions_ios/**
     - zuraffa_permissions_macos/**
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**

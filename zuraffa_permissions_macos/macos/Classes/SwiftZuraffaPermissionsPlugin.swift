@@ -1,8 +1,9 @@
 import AVFoundation
 import Contacts
 import EventKit
-import Flutter
+import FlutterMacOS
 import LocalAuthentication
+import UserNotifications
 import Photos
 import AppKit
 
@@ -27,7 +28,7 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(
       name: channelName,
-      binaryMessenger: registrar.messenger()
+      binaryMessenger: registrar.messenger
     )
     let instance = ZuraffaPermissionsPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
@@ -239,14 +240,17 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
       completion(status)
       return
     }
-    // Same bounded-poll workaround as iOS: request + poll the status.
+    // Same bounded-poll workaround as iOS: request + poll the status. The
+    // window is ~30s (200 × 0.15s) so a real user has time to respond to the
+    // system dialog; a 9s window is too short and would wrongly report
+    // undetermined for a slow tapper.
     let manager = CLLocationManager()
     var attempts = 0
     func poll() {
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
         attempts += 1
         let current = self.locationStatus()
-        if current != self.undetermined || attempts >= 60 {
+        if current != self.undetermined || attempts >= 200 {
           completion(current)
         } else {
           poll()
@@ -285,13 +289,24 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
   // MARK: - Calendar
 
   private func calendarStatus() -> String {
-    switch EKEventStore.authorizationStatus(for: .event) {
-    case .authorized, .fullAccess: return granted
-    case .writeOnly, .limited: return limited
-    case .notDetermined: return undetermined
-    case .denied: return denied
-    case .restricted: return restricted
-    @unknown default: return undetermined
+    let status = EKEventStore.authorizationStatus(for: .event)
+    if #available(macOS 14.0, *) {
+      switch status {
+      case .authorized, .fullAccess: return granted
+      case .writeOnly: return limited
+      case .notDetermined: return undetermined
+      case .denied: return denied
+      case .restricted: return restricted
+      @unknown default: return undetermined
+      }
+    } else {
+      switch status {
+      case .authorized: return granted
+      case .notDetermined: return undetermined
+      case .denied: return denied
+      case .restricted: return restricted
+      @unknown default: return undetermined
+      }
     }
   }
 
