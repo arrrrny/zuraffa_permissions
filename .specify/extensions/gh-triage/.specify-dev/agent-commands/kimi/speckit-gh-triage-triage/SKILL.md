@@ -1,6 +1,9 @@
 ---
 name: speckit-gh-triage-triage
-description: Fetch open GitHub issues, classify each as bug, feature, or chore, route bugs to the bug workflow (assess/fix/pr), chores to the chore workflow (assess/implement/pr), and features to speckit.specify, and label each issue with the correct triage labels (on by default)
+description: Fetch open GitHub issues, classify each as bug, feature, or chore, route
+  bugs to the bug workflow (assess/fix/pr), chores to the chore workflow (assess/implement/pr),
+  and features to speckit.specify, and label each issue with the correct triage labels
+  (on by default)
 compatibility: Requires spec-kit project structure with .specify/ directory
 metadata:
   author: github-spec-kit
@@ -14,13 +17,13 @@ command: (1) fetches it, (2) classifies it as **bug**, **feature**, or
 **chore**, (3) labels it with the correct triage labels read directly from
 config (on by default), and (4) routes it to the right downstream workflow:
 
-- **bug** → the **bug** workflow (`/skill:speckit-bug-fetch`,
-  `/skill:speckit-bug-assess`, `/skill:speckit-bug-fix`,
-  `/skill:speckit-bug-pr`).
-- **chore** → the **chore** workflow (`/skill:speckit-chore-fetch`,
-  `/skill:speckit-chore-assess`, `/skill:speckit-chore-implement`,
-  `/skill:speckit-chore-pr`).
-- **feature** → the core `/skill:speckit-specify` command for new features.
+- **bug** → the **bug** workflow (`/speckit-bug-fetch`,
+  `/speckit-bug-assess`, `/speckit-bug-fix`,
+  `/speckit-bug-pr`).
+- **chore** → the **chore** workflow (`/speckit-chore-fetch`,
+  `/speckit-chore-assess`, `/speckit-chore-implement`,
+  `/speckit-chore-pr`).
+- **feature** → the core `/speckit-specify` command for new features.
 
 A **chore** is maintenance work that is neither a bug (something broken) nor a
 feature (new user-facing capability): refactors, dependency bumps, asset/branding
@@ -90,9 +93,9 @@ For each issue classified `bug`:
 1. **Load it** into the bug workflow. This records `issue.md` (with the existing
    GitHub issue URL/number) and seeds an assessment draft under
    `.specify/bugs/<slug>/`:
-   `/skill:speckit-bug-fetch <issue-url>`
+   `/speckit-bug-fetch <issue-url>`
 2. **Assess** it (locates code paths, severity, remediation):
-   `/skill:speckit-bug-assess <issue-url>`
+   `/speckit-bug-assess <issue-url>`
 
 That is the default scope. **gh-triage never creates a new GitHub issue, never
 runs `bug.fix`, and never opens a PR** unless you opt in:
@@ -101,7 +104,7 @@ runs `bug.fix`, and never opens a PR** unless you opt in:
   `bug.issue`, `bug.fix`, or `bug.pr`. The bug is triaged and assessed; a human
   (or a later, explicit run with `auto_fix: true`) decides what to do next.
 - `auto_fix: true` → only then may you continue with
-  `/skill:speckit-bug-fix slug=<slug>` and `/skill:speckit-bug-pr slug=<slug>`.
+  `/speckit-bug-fix slug=<slug>` and `/speckit-bug-pr slug=<slug>`.
 
 #### Why no `bug.issue`, and no infinite loop
 
@@ -125,10 +128,10 @@ For each issue classified `chore`:
 1. **Load it** into the chore workflow. This records `issue.md` (with the existing
    GitHub issue URL/number) and seeds an assessment draft under
    `.specify/chores/<slug>/`:
-   `/skill:speckit-chore-fetch <issue-url>`
+   `/speckit-chore-fetch <issue-url>`
 2. **Assess it** (locate affected paths, consult the constitution, propose an
    approach):
-   `/skill:speckit-chore-assess <issue-url>`
+   `/speckit-chore-assess <issue-url>`
 
 That is the default scope. **gh-triage never creates a new GitHub issue, never
 runs `chore.implement`, and never opens a PR** unless you opt in:
@@ -138,8 +141,8 @@ runs `chore.implement`, and never opens a PR** unless you opt in:
   scoped; a human (or a later, explicit run with `auto_implement: true`) decides
   what to do next.
 - `auto_implement: true` → only then may you continue with
-  `/skill:speckit-chore-implement slug=<slug>` and
-  `/skill:speckit-chore-pr slug=<slug>`.
+  `/speckit-chore-implement slug=<slug>` and
+  `/speckit-chore-pr slug=<slug>`.
 
 #### Why no `chore.issue`, and no infinite loop
 
@@ -159,7 +162,7 @@ is already tracked. Therefore:
 
 For each issue classified `feature`, create a feature spec from the issue:
 
-`/skill:speckit-specify <issue-title>: <one-paragraph summary of the request, quoting the issue URL>`
+`/speckit-specify <issue-title>: <one-paragraph summary of the request, quoting the issue URL>`
 
 This writes `specs/<n>-<slug>/spec.md`. Follow it with clarification/planning as the spec workflow directs.
 

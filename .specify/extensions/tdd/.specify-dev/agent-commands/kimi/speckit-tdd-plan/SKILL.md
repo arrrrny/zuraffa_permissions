@@ -1,6 +1,8 @@
 ---
 name: speckit-tdd-plan
-description: Derive the feature's test list from spec.md and plan.md into specs/<feature>/tdd/test-list.md (outer acceptance behaviors, inner unit behaviors, each traced to an acceptance criterion) and make the test tasks in tasks.md mandatory and correctly ordered
+description: Derive the feature's test list from spec.md and plan.md into specs/<feature>/tdd/test-list.md
+  (outer acceptance behaviors, inner unit behaviors, each traced to an acceptance
+  criterion) and make the test tasks in tasks.md mandatory and correctly ordered
 compatibility: Requires spec-kit project structure with .specify/ directory
 metadata:
   author: github-spec-kit

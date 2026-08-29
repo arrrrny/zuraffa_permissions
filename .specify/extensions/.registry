@@ -18,7 +18,7 @@
         ]
       },
       "registered_skills": [],
-      "installed_at": "2026-08-29T04:40:01.493267+00:00"
+      "installed_at": "2026-08-29T08:37:48.865775+00:00"
     },
     "git": {
       "version": "1.0.0",
@@ -36,7 +36,7 @@
         ]
       },
       "registered_skills": [],
-      "installed_at": "2026-08-29T04:40:02.488611+00:00"
+      "installed_at": "2026-08-29T08:37:49.280079+00:00"
     },
     "gh-triage": {
       "version": "1.1.0",
@@ -51,7 +51,7 @@
         ]
       },
       "registered_skills": [],
-      "installed_at": "2026-08-29T04:40:03.579248+00:00"
+      "installed_at": "2026-08-29T08:37:49.710603+00:00"
     },
     "gym": {
       "version": "1.0.0",
@@ -69,7 +69,7 @@
         ]
       },
       "registered_skills": [],
-      "installed_at": "2026-08-29T04:40:04.385721+00:00"
+      "installed_at": "2026-08-29T08:37:50.152025+00:00"
     },
     "tdd": {
       "version": "1.1.2",
@@ -86,7 +86,7 @@
         ]
       },
       "registered_skills": [],
-      "installed_at": "2026-08-29T04:40:05.417582+00:00"
+      "installed_at": "2026-08-29T08:37:50.592026+00:00"
     },
     "chore": {
       "version": "1.0.0",
@@ -104,7 +104,7 @@
         ]
       },
       "registered_skills": [],
-      "installed_at": "2026-08-29T04:40:06.444605+00:00"
+      "installed_at": "2026-08-29T08:37:51.063906+00:00"
     }
   }
 }
