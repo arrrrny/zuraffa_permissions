@@ -144,7 +144,9 @@ void registerPermissionDependencies(
     )
     // FR-007: also wire the permission-scope use cases and their repository.
     ..registerLazySingleton<PermissionScopeRepository>(
-      () => DataPermissionScopeRepository(getIt<PermissionScopeRemoteDataSource>()),
+      () => DataPermissionScopeRepository(
+        getIt<PermissionScopeRemoteDataSource>(),
+      ),
     );
   setupDependencies(getIt);
 }
