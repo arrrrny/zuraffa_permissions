@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 
+import 'flow_log_view.dart';
 import 'matrix_controller.dart';
 import 'matrix_grid.dart';
 import 'scope_flow_tile.dart';
@@ -136,6 +137,25 @@ class MatrixPanel extends StatelessWidget {
                     ],
                   ),
                 ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+                  child: Text(
+                    'Flow log',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                FlowLogView(controller: controller),
               ],
             ),
           ),

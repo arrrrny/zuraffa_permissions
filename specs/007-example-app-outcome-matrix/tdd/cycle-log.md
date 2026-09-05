@@ -53,3 +53,18 @@ existed and failed before the implementation.
   status, description) in the matrix panel. Suite -> 10 passed, 0 failed.
 - refactor: none needed.
 - commit: (this commit)
+
+## Cycle 3: A3, A4, U34–U39 — settings routing + flow log
+
+- test: `example/test/outcome_matrix_test.dart` (added) — acceptance
+  transitions + routing tests, the settings-routing group, and the flow-log
+  group.
+- red: `flutter test` -> 8 failed, 10 passed. The Open Settings buttons and the
+  flow log do not exist: `find.byKey(ValueKey('settings-camera'))` found 0
+  widgets; `find.text('check camera → undetermined')` found 0 widgets.
+- green: `FlowEvent` recording in the controller (check/set/request/
+  openSettings, from → to), the Open Settings button on permanently-denied
+  rows (launch result reported via a snackbar, snackbars cleared on repeat),
+  and `flow_log_view.dart` in the matrix panel. Suite -> 18 passed, 0 failed.
+- refactor: none needed.
+- commit: (this commit)

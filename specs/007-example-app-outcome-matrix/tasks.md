@@ -34,7 +34,7 @@
 
 ## Phase 3 — Permanently denied → settings + flow log
 
-- [ ] 3.1 [P] [U34] [U35] [U36] [A4] [U37] [U38] [U39] [A3] Write the
+- [X] 3.1 [P] [U34] [U35] [U36] [A4] [U37] [U38] [U39] [A3] Write the
       settings-routing and flow-log tests; observe red; implement the Open Settings
       routing, launch-result reporting, and the flow log view. Green.
 

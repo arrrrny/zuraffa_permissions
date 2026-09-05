@@ -1,6 +1,36 @@
 import 'package:flutter/foundation.dart';
 import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 
+/// One chronological outcome-matrix event: what happened, to which scope, and
+/// the from → to statuses it transitioned through.
+enum FlowEventKind { check, forced, requested, settingsOpened }
+
+class FlowEvent {
+  const FlowEvent({
+    required this.kind,
+    this.scope,
+    this.from,
+    this.to,
+    this.launched,
+  });
+
+  final FlowEventKind kind;
+  final String? scope;
+  final PermissionStatus? from;
+  final PermissionStatus? to;
+  final bool? launched;
+
+  /// The one-line record the flow log renders, e.g.
+  /// `request camera: undetermined → denied`.
+  String get label => switch (kind) {
+    FlowEventKind.check => 'check $scope → ${to!.name}',
+    FlowEventKind.forced => 'set $scope: ${from!.name} → ${to!.name}',
+    FlowEventKind.requested => 'request $scope: ${from!.name} → ${to!.name}',
+    FlowEventKind.settingsOpened =>
+      (launched ?? false) ? 'openSettings: launched' : 'openSettings: unavailable',
+  };
+}
+
 /// Drives the outcome-matrix simulator: the scope × status grid state, the
 /// per-scope check/request surface, and the flow log.
 ///
@@ -19,6 +49,10 @@ class MatrixController extends ChangeNotifier {
 
   /// Current status per scope id (the matrix's visual state).
   final Map<String, PermissionStatus> _statuses = {};
+
+  /// The chronological flow log (what the matrix did, and how statuses
+  /// transitioned) — the AC-003 transition record.
+  final List<FlowEvent> events = [];
 
   /// All registered scopes (built-ins plus customs), in registration order.
   List<PermissionScope> get scopes => service.scopes.toList();
@@ -40,14 +74,15 @@ class MatrixController extends ChangeNotifier {
   /// Checks every scope's current status without prompting.
   Future<void> checkAll() async {
     for (final scope in scopes) {
-      _statuses[scope.id] = await service.check(scope.id);
+      await check(scope.id);
     }
-    notifyListeners();
   }
 
   /// Re-checks a single scope's current status without prompting.
   Future<void> check(String scopeId) async {
-    _statuses[scopeId] = await service.check(scopeId);
+    final status = await service.check(scopeId);
+    events.add(FlowEvent(kind: FlowEventKind.check, scope: scopeId, to: status));
+    _statuses[scopeId] = status;
     notifyListeners();
   }
 
@@ -57,8 +92,12 @@ class MatrixController extends ChangeNotifier {
   void forceStatus(String scopeId, PermissionStatus status) {
     final adapter = _simAdapter;
     if (adapter == null) return;
+    final from = statusOf(scopeId);
     adapter.setStatus(scopeId, status);
     _statuses[scopeId] = status;
+    events.add(
+      FlowEvent(kind: FlowEventKind.forced, scope: scopeId, from: from, to: status),
+    );
     notifyListeners();
   }
 
@@ -68,7 +107,16 @@ class MatrixController extends ChangeNotifier {
   /// permanently-denied one does not re-prompt (the caller routes to
   /// [openSettings]).
   Future<PermissionRequestResult> request(String scopeId) async {
+    final from = statusOf(scopeId);
     final result = await service.request(scopeId);
+    events.add(
+      FlowEvent(
+        kind: FlowEventKind.requested,
+        scope: scopeId,
+        from: from,
+        to: result.status,
+      ),
+    );
     _statuses[scopeId] = result.status;
     notifyListeners();
     return result;
@@ -76,5 +124,10 @@ class MatrixController extends ChangeNotifier {
 
   /// Opens the OS settings page through the port; reports whether it could
   /// be launched.
-  Future<bool> openSettings() => service.openSettings();
+  Future<bool> openSettings() async {
+    final launched = await service.openSettings();
+    events.add(FlowEvent(kind: FlowEventKind.settingsOpened, launched: launched));
+    notifyListeners();
+    return launched;
+  }
 }

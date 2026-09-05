@@ -17,6 +17,7 @@ class ScopeFlowTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final status = controller.statusOf(scope.id);
     final color = statusColor(status);
+    final permanentlyDenied = status == PermissionStatus.permanentlyDenied;
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
       child: Padding(
@@ -65,6 +66,34 @@ class ScopeFlowTile extends StatelessWidget {
                   onPressed: () => controller.request(scope.id),
                   child: const Text('Request'),
                 ),
+                // FR-005: a permanently denied scope never re-prompts — the
+                // only way forward is routing the user to the OS settings.
+                if (permanentlyDenied)
+                  FilledButton.icon(
+                    key: ValueKey('settings-${scope.id}'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: statusColor(
+                        PermissionStatus.permanentlyDenied,
+                      ),
+                    ),
+                    onPressed: () async {
+                      final launched = await controller.openSettings();
+                      if (!context.mounted) return;
+                      ScaffoldMessenger.of(context)
+                        ..clearSnackBars()
+                        ..showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              launched
+                                  ? 'Settings opened'
+                                  : 'Settings unavailable',
+                            ),
+                          ),
+                        );
+                    },
+                    icon: const Icon(Icons.settings, size: 16),
+                    label: const Text('Open Settings'),
+                  ),
               ],
             ),
           ],

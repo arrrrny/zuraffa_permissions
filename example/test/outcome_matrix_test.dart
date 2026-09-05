@@ -84,6 +84,54 @@ void main() {
         );
       }
     });
+
+    testWidgets('the matrix visually displays status transitions', (tester) async {
+      useLargeSurface(tester);
+      final service = await pumpMatrix(tester);
+      final adapter = adapterOf(service);
+      adapter.setPromptOutcome('notifications', PermissionStatus.denied);
+      final dot = find.byKey(const ValueKey('matrix-active-dot-notifications'));
+      expect(
+        find.ancestor(of: dot, matching: cell('notifications', PermissionStatus.undetermined)),
+        findsOneWidget,
+        reason: 'the marker starts in the undetermined column',
+      );
+      await tap(tester, find.byKey(const ValueKey('request-notifications')));
+      expect(
+        find.ancestor(of: dot, matching: cell('notifications', PermissionStatus.denied)),
+        findsOneWidget,
+        reason: 'the marker followed the request transition',
+      );
+      expect(
+        find.text('request notifications: undetermined → denied'),
+        findsOneWidget,
+        reason: 'the transition is recorded in the flow log',
+      );
+    });
+
+    testWidgets('the permanently denied path routes to settings', (tester) async {
+      useLargeSurface(tester);
+      await pumpMatrix(tester);
+      await tap(tester, cell('camera', PermissionStatus.permanentlyDenied));
+      await tap(tester, find.byKey(const ValueKey('request-camera')));
+      expect(
+        find.byKey(const ValueKey('settings-camera')),
+        findsOneWidget,
+        reason: 'the permanently denied row offers Open Settings',
+      );
+      await tap(tester, find.byKey(const ValueKey('settings-camera')));
+      await tester.pump();
+      expect(
+        find.text('Settings opened'),
+        findsOneWidget,
+        reason: 'the settings launch is reported',
+      );
+      expect(
+        find.text('openSettings: launched'),
+        findsOneWidget,
+        reason: 'the routing is recorded in the flow log',
+      );
+    });
   });
 
   group('outcome matrix structure (FR-001/FR-002)', () {
@@ -214,6 +262,144 @@ void main() {
         }
       },
     );
+  });
+
+  group('permanently denied → settings (FR-005)', () {
+    testWidgets(
+      'request on a permanently denied scope does not re-prompt and offers '
+      'Open Settings',
+      (tester) async {
+        useLargeSurface(tester);
+        final service = await pumpMatrix(tester);
+        final adapter = adapterOf(service);
+        await tap(tester, cell('camera', PermissionStatus.permanentlyDenied));
+        // Would be the prompt answer if the port re-prompted (it must not).
+        adapter.setPromptOutcome('camera', PermissionStatus.granted);
+        await tap(tester, find.byKey(const ValueKey('request-camera')));
+        expect(
+          find.descendant(
+            of: statusChip('camera'),
+            matching: find.text(PermissionStatus.permanentlyDenied.name),
+          ),
+          findsOneWidget,
+          reason: 'a permanently denied scope does not re-prompt (FR-005)',
+        );
+        expect(
+          await adapter.check('camera'),
+          PermissionStatus.permanentlyDenied,
+          reason: 'the prepared outcome was ignored',
+        );
+        expect(
+          find.byKey(const ValueKey('settings-camera')),
+          findsOneWidget,
+          reason: 'the row offers Open Settings',
+        );
+      },
+    );
+
+    testWidgets(
+      'Open Settings appears only for permanently denied scopes',
+      (tester) async {
+        useLargeSurface(tester);
+        await pumpMatrix(tester);
+        await tap(tester, cell('biometrics', PermissionStatus.denied));
+        await tester.pump();
+        expect(
+          find.byKey(const ValueKey('settings-biometrics')),
+          findsNothing,
+          reason: 'a merely denied scope does not offer settings',
+        );
+        await tap(tester, cell('biometrics', PermissionStatus.permanentlyDenied));
+        await tester.pump();
+        expect(
+          find.byKey(const ValueKey('settings-biometrics')),
+          findsOneWidget,
+          reason: 'a permanently denied scope does',
+        );
+      },
+    );
+
+    testWidgets('tapping Open Settings reports the launch result', (
+      tester,
+    ) async {
+      useLargeSurface(tester);
+      final service = await pumpMatrix(tester);
+      final adapter = adapterOf(service);
+      await tap(tester, cell('camera', PermissionStatus.permanentlyDenied));
+      await tap(tester, find.byKey(const ValueKey('settings-camera')));
+      await tester.pump();
+      expect(
+        find.text('Settings opened'),
+        findsOneWidget,
+        reason: 'the successful launch is reported',
+      );
+      adapter.settingsLaunchable = false;
+      await tap(tester, find.byKey(const ValueKey('settings-camera')));
+      await tester.pump();
+      expect(
+        find.text('Settings unavailable'),
+        findsOneWidget,
+        reason: 'the failed launch is reported',
+      );
+    });
+  });
+
+  group('flow log (FR-006)', () {
+    testWidgets(
+      'the flow log records the boot-time check of every scope',
+      (tester) async {
+        useLargeSurface(tester);
+        await pumpMatrix(tester);
+        for (final scope in BuiltInPermissionScopes.all) {
+          expect(
+            find.text('check ${scope.id} → undetermined'),
+            findsOneWidget,
+            reason: 'the boot-time check of ${scope.id} is recorded',
+          );
+        }
+      },
+    );
+
+    testWidgets('the flow log records set and request transitions', (
+      tester,
+    ) async {
+      useLargeSurface(tester);
+      await pumpMatrix(tester);
+      await tap(tester, cell('camera', PermissionStatus.denied));
+      expect(
+        find.text('set camera: undetermined → denied'),
+        findsOneWidget,
+        reason: 'a forced status is logged with its from → to',
+      );
+      await tap(tester, find.byKey(const ValueKey('request-camera')));
+      expect(
+        find.text('request camera: denied → denied'),
+        findsOneWidget,
+        reason: 'an idempotent request is logged with its from → to',
+      );
+      await tap(tester, cell('camera', PermissionStatus.permanentlyDenied));
+      await tap(tester, find.byKey(const ValueKey('request-camera')));
+      expect(
+        find.text('request camera: permanentlyDenied → permanentlyDenied'),
+        findsOneWidget,
+        reason: 'the no-re-prompt outcome is logged',
+      );
+    });
+
+    testWidgets('the flow log records the openSettings launch result', (
+      tester,
+    ) async {
+      useLargeSurface(tester);
+      await pumpMatrix(tester);
+      await tap(tester, cell('camera', PermissionStatus.permanentlyDenied));
+      await tap(tester, find.byKey(const ValueKey('settings-camera')));
+      await tester.pump();
+      expect(
+        find.text('openSettings: launched'),
+        findsOneWidget,
+        reason: 'the launch result is recorded',
+      );
+    });
   });
 
   group('scope × status cells (FR-003)', () {

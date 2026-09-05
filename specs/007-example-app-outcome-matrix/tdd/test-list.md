@@ -34,8 +34,8 @@ end to end through its real entry point (the app root, real taps).
 | --- | ----------------------------------------------------------------------------------------------------------- | ------- | ------- | ------- | ---- |
 | A1  | The example app runs: it boots to the outcome-matrix home listing every built-in scope (compile/run evidence for the other platforms is the cycle log's `flutter build web` + platform scaffolding entries) | AC-001, FR-008 | example | DONE | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the app boots to the outcome-matrix home` ||
 | A2  | Every built-in scope is exercisable: each of the eleven scopes can be placed into a status and requested through the real UI | AC-002, FR-001, FR-003, FR-004 | example | DONE | `example/test/outcome_matrix_test.dart::acceptance (issue #7) every built-in scope is exercisable end to end` |
-| A3  | The outcome matrix visually displays status transitions: the active cell marker moves and the flow log records each from → to | AC-003, FR-002, FR-006 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the matrix visually displays status transitions` |
-| A4  | The permanentlyDenied path routes to settings: request does not re-prompt, Open Settings is offered, and the launch result is reported | AC-004, FR-005 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the permanently denied path routes to settings` |
+| A3  | The outcome matrix visually displays status transitions: the active cell marker moves and the flow log records each from → to | AC-003, FR-002, FR-006 | example | DONE | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the matrix visually displays status transitions` |
+| A4  | The permanentlyDenied path routes to settings: request does not re-prompt, Open Settings is offered, and the launch result is reported | AC-004, FR-005 | example | DONE | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the permanently denied path routes to settings` |
 
 ## Inner loop: unit behaviors
 
@@ -63,17 +63,17 @@ Grouped by the component that owns them. Ids continue the repository's `U` serie
 
 | id  | behavior                                                                                     | traces      | kind    | state   | test |
 | --- | -------------------------------------------------------------------------------------------- | ----------- | ------- | ------- | ---- |
-| U34 | Requesting a `permanentlyDenied` scope does not re-prompt (a prepared outcome is ignored) and the row offers Open Settings | FR-005, AC-004 | example | PENDING | `example/test/outcome_matrix_test.dart::permanently denied → settings (FR-005) request on a permanently denied scope does not re-prompt and offers Open Settings` |
-| U35 | Open Settings is offered only while the scope is `permanentlyDenied`                         | FR-005      | example | PENDING | `example/test/outcome_matrix_test.dart::permanently denied → settings (FR-005) Open Settings appears only for permanently denied scopes` |
-| U36 | Tapping Open Settings launches settings and reports the result (`launched` / `unavailable`)   | FR-005, AC-004 | example | PENDING | `example/test/outcome_matrix_test.dart::permanently denied → settings (FR-005) tapping Open Settings reports the launch result` |
+| U34 | Requesting a `permanentlyDenied` scope does not re-prompt (a prepared outcome is ignored) and the row offers Open Settings | FR-005, AC-004 | example | DONE | `example/test/outcome_matrix_test.dart::permanently denied → settings (FR-005) request on a permanently denied scope does not re-prompt and offers Open Settings` |
+| U35 | Open Settings is offered only while the scope is `permanentlyDenied`                         | FR-005      | example | DONE | `example/test/outcome_matrix_test.dart::permanently denied → settings (FR-005) Open Settings appears only for permanently denied scopes` |
+| U36 | Tapping Open Settings launches settings and reports the result (`launched` / `unavailable`)   | FR-005, AC-004 | example | DONE | `example/test/outcome_matrix_test.dart::permanently denied → settings (FR-005) tapping Open Settings reports the launch result` |
 
 ### `example/lib/src/flow_log_view.dart` + controller events
 
 | id  | behavior                                                                                     | traces      | kind    | state   | test |
 | --- | -------------------------------------------------------------------------------------------- | ----------- | ------- | ------- | ---- |
-| U37 | The flow log records a check entry for every scope when the app boots                        | FR-006, AC-003 | example | PENDING | `example/test/outcome_matrix_test.dart::flow log (FR-006) the flow log records the boot-time check of every scope` |
-| U38 | The flow log records forced statuses and requests with their from → to transitions           | FR-006, AC-003 | example | PENDING | `example/test/outcome_matrix_test.dart::flow log (FR-006) the flow log records set and request transitions` |
-| U39 | The flow log records the openSettings event with its launch result                           | FR-006, AC-004 | example | PENDING | `example/test/outcome_matrix_test.dart::flow log (FR-006) the flow log records the openSettings launch result` |
+| U37 | The flow log records a check entry for every scope when the app boots                        | FR-006, AC-003 | example | DONE | `example/test/outcome_matrix_test.dart::flow log (FR-006) the flow log records the boot-time check of every scope` |
+| U38 | The flow log records forced statuses and requests with their from → to transitions           | FR-006, AC-003 | example | DONE | `example/test/outcome_matrix_test.dart::flow log (FR-006) the flow log records set and request transitions` |
+| U39 | The flow log records the openSettings event with its launch result                           | FR-006, AC-004 | example | DONE | `example/test/outcome_matrix_test.dart::flow log (FR-006) the flow log records the openSettings launch result` |
 
 ### `example/lib/src/live_permission_panel.dart` (federated wiring)
 
