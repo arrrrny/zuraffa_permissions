@@ -85,3 +85,28 @@ existed and failed before the implementation.
   0 failed.
 - refactor: none needed.
 - commit: (this commit)
+
+## Phase 5: platforms + dependency hygiene (FR-008 / AC-001, non-widget half)
+
+- scaffolding: `flutter create --platforms=web,windows,linux .` added the three
+  missing platform targets (android/ios/macos untouched; `lib/` and `test/`
+  untouched by the create — git status showed only `.metadata` + the new dirs).
+- deps: declared `get_it: ^9.2.1` and `zuraffa: ^6.1.0` as direct example
+  dependencies (they were undeclared transitive imports — the 6 baseline
+  `depend_on_referenced_packages` infos). `flutter pub get` -> resolved.
+- compile evidence: `flutter build web --release` -> `✓ Built build/web`
+  (89.4s). windows/linux desktop targets could NOT be compiled in this
+  environment (no clang/cmake/ninja toolchain) — recorded as not-proven-here,
+  honest limitation; the scaffolding is in place for a desktop CI/dev box.
+
+## Phase 6: gates
+
+- `flutter analyze` (root) -> No issues found! (baseline was 6 infos).
+- `flutter analyze` (example) -> No issues found!
+- `dart test` (root, regression gate) -> 22 passed, 0 failed.
+- `flutter test` (example) -> 19 passed, 0 failed.
+- `dart format .` -> 49 files (13 changed; includes the 8 pre-existing
+  off-format files from the baseline note). Re-check
+  `dart format --output=none --set-exit-if-changed .` -> 0 changed, exit 0
+  (zero remaining formatting diffs).
+- Post-format re-run of both suites: still 22/22 and 19/19.

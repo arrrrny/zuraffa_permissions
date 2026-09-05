@@ -45,7 +45,7 @@
 
 ## Phase 5 — Platforms (FR-008, AC-001 non-widget half)
 
-- [ ] 5.1 [P] Add `web`/`windows`/`linux` scaffolding to `example/`
+- [X] 5.1 [P] Add `web`/`windows`/`linux` scaffolding to `example/`
       (`flutter create --platforms=web,windows,linux .`), keep android/ios/macos
       untouched, and record `flutter build web --release` as the compile evidence.
       Fix the example's undeclared direct imports (`zuraffa`, `get_it`) so
@@ -53,7 +53,7 @@
 
 ## Phase 6 — Gates
 
-- [ ] 6.1 [P] `flutter analyze` (root + example) — no new issues; `dart test`
+- [X] 6.1 [P] `flutter analyze` (root + example) — no new issues; `dart test`
       (root) green; `flutter test` (example) green; `dart format .` zero remaining
       diffs; report actual counts.
 
