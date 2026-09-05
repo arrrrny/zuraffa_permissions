@@ -40,7 +40,7 @@
 
 ## Phase 4 — Live tab (federated adapters)
 
-- [ ] 4.1 [P] [U40] Write the live-tab test; observe red; implement
+- [X] 4.1 [P] [U40] Write the live-tab test; observe red; implement
       `LivePermissionPanel` over the injected/GetIt-resolved service. Green.
 
 ## Phase 5 — Platforms (FR-008, AC-001 non-widget half)

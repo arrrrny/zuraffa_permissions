@@ -68,3 +68,20 @@ existed and failed before the implementation.
   and `flow_log_view.dart` in the matrix panel. Suite -> 18 passed, 0 failed.
 - refactor: none needed.
 - commit: (this commit)
+
+## Cycle 4: U40 — the live tab (federated adapters)
+
+- test: `example/test/outcome_matrix_test.dart` (added) — live-tab group.
+- red: honesty note — the panel implementation was written in the same batch
+  as the test, so the red was observed by temporarily unwiring the tab
+  (`TabBarView`'s second child swapped to `SizedBox.shrink()`), running
+  `flutter test --name "the live tab renders..."` ->
+  `Found 0 widgets with key [<'live-scope-camera'>]` (1 failed), then
+  restoring the wiring. The red is real and observed; the ordering deviation
+  is recorded here rather than hidden.
+- green: `live_permission_panel.dart` — the GetIt-resolved (or injected)
+  live service with per-scope check/request, permanently-denied Open
+  Settings routing, and the port-runtime-type chip. Suite -> 19 passed,
+  0 failed.
+- refactor: none needed.
+- commit: (this commit)

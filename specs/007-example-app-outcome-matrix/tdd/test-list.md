@@ -79,7 +79,7 @@ Grouped by the component that owns them. Ids continue the repository's `U` serie
 
 | id  | behavior                                                                                     | traces      | kind    | state   | test |
 | --- | -------------------------------------------------------------------------------------------- | ----------- | ------- | ------- | ---- |
-| U40 | The live tab renders the live service's scopes with check/request actions (the GetIt wiring itself is covered by the inherited baseline test U41) | FR-007 | example | PENDING | `example/test/outcome_matrix_test.dart::live tab (FR-007) the live tab renders the live service's scopes with check and request actions` |
+| U40 | The live tab renders the live service's scopes with check/request actions (the GetIt wiring itself is covered by the inherited baseline test U41) | FR-007 | example | DONE | `example/test/outcome_matrix_test.dart::live tab (FR-007) the live tab renders the live service's scopes with check and request actions` |
 | U41 | Existing baseline: `registerPermissionDependencies` wires the stack onto GetIt and the app renders (unchanged, inherited) | FR-007 | example | BASELINE | `example/test/widget_test.dart::permission app renders and wires the service` |
 
 ## Invariants and edge cases still to place

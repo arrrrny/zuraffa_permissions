@@ -402,6 +402,38 @@ void main() {
     });
   });
 
+  group('live tab (FR-007)', () {
+    testWidgets(
+      "the live tab renders the live service's scopes with check and "
+      'request actions',
+      (tester) async {
+        useLargeSurface(tester);
+        final live = inMemoryService();
+        await tester.pumpWidget(PermissionApp(liveService: live));
+        await tester.pumpAndSettle();
+        await tap(tester, find.text('Live'));
+        await tester.pumpAndSettle();
+        for (final scope in BuiltInPermissionScopes.all) {
+          expect(
+            find.byKey(ValueKey('live-scope-${scope.id}')),
+            findsOneWidget,
+            reason: 'the live tab lists ${scope.id}',
+          );
+        }
+        await tap(tester, find.byKey(const ValueKey('live-request-camera')));
+        await tester.pump();
+        expect(
+          find.descendant(
+            of: find.byKey(const ValueKey('live-status-camera')),
+            matching: find.text(PermissionStatus.granted.name),
+          ),
+          findsOneWidget,
+          reason: 'a live request resolves through the port',
+        );
+      },
+    );
+  });
+
   group('scope × status cells (FR-003)', () {
     testWidgets('every cell forces its scope into that status', (tester) async {
       useLargeSurface(tester);

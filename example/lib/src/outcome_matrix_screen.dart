@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 
 import 'flow_log_view.dart';
+import 'live_permission_panel.dart';
 import 'matrix_controller.dart';
 import 'matrix_grid.dart';
 import 'scope_flow_tile.dart';
@@ -52,7 +53,7 @@ class _OutcomeMatrixScreenState extends State<OutcomeMatrixScreen> {
         ),
         body: TabBarView(children: [
           MatrixPanel(controller: _controller),
-          const SizedBox.shrink(),
+          LivePermissionPanel(service: widget.liveService),
         ]),
       ),
     );
