@@ -3,6 +3,7 @@ import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 
 import 'matrix_controller.dart';
 import 'matrix_grid.dart';
+import 'scope_flow_tile.dart';
 
 /// The outcome-matrix home (issue #7): the simulator tab — scope × status
 /// matrix, per-scope exerciser, flow log — and the live tab, which runs the
@@ -110,6 +111,33 @@ class MatrixPanel extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: MatrixGrid(controller: controller),
+          ),
+        ),
+        const SizedBox(height: 8),
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(4, 4, 4, 8),
+                  child: Text(
+                    'Permission flow — check → request → openSettings',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ),
+                AnimatedBuilder(
+                  animation: controller,
+                  builder: (context, _) => Column(
+                    children: [
+                      for (final scope in controller.scopes)
+                        ScopeFlowTile(scope: scope, controller: controller),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ],

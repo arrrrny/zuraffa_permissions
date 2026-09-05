@@ -33,7 +33,7 @@ end to end through its real entry point (the app root, real taps).
 | id  | behavior                                                                                                    | traces  | kind    | state   | test |
 | --- | ----------------------------------------------------------------------------------------------------------- | ------- | ------- | ------- | ---- |
 | A1  | The example app runs: it boots to the outcome-matrix home listing every built-in scope (compile/run evidence for the other platforms is the cycle log's `flutter build web` + platform scaffolding entries) | AC-001, FR-008 | example | DONE | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the app boots to the outcome-matrix home` ||
-| A2  | Every built-in scope is exercisable: each of the eleven scopes can be placed into a status and requested through the real UI | AC-002, FR-001, FR-003, FR-004 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) every built-in scope is exercisable end to end` |
+| A2  | Every built-in scope is exercisable: each of the eleven scopes can be placed into a status and requested through the real UI | AC-002, FR-001, FR-003, FR-004 | example | DONE | `example/test/outcome_matrix_test.dart::acceptance (issue #7) every built-in scope is exercisable end to end` |
 | A3  | The outcome matrix visually displays status transitions: the active cell marker moves and the flow log records each from → to | AC-003, FR-002, FR-006 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the matrix visually displays status transitions` |
 | A4  | The permanentlyDenied path routes to settings: request does not re-prompt, Open Settings is offered, and the launch result is reported | AC-004, FR-005 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the permanently denied path routes to settings` |
 
@@ -55,9 +55,9 @@ Grouped by the component that owns them. Ids continue the repository's `U` serie
 
 | id  | behavior                                                                                     | traces      | kind    | state   | test |
 | --- | -------------------------------------------------------------------------------------------- | ----------- | ------- | ------- | ---- |
-| U31 | Requesting an `undetermined` scope resolves the prepared prompt outcome and records it (sticky) | FR-004, AC-002 | example | PENDING | `example/test/outcome_matrix_test.dart::request flow (FR-004) request on an undetermined scope resolves the prepared prompt outcome` |
-| U32 | Requesting with no prepared outcome defaults to `granted`                                    | FR-004      | example | PENDING | `example/test/outcome_matrix_test.dart::request flow (FR-004) request with no prepared outcome defaults to granted` |
-| U33 | Requesting an already-decided scope (`granted`/`denied`/`restricted`/`limited`) returns the status unchanged (idempotent) | FR-004 | example | PENDING | `example/test/outcome_matrix_test.dart::request flow (FR-004) request on an already-decided status returns it unchanged` |
+| U31 | Requesting an `undetermined` scope resolves the prepared prompt outcome and records it (sticky) | FR-004, AC-002 | example | DONE | `example/test/outcome_matrix_test.dart::request flow (FR-004) request on an undetermined scope resolves the prepared prompt outcome` |
+| U32 | Requesting with no prepared outcome defaults to `granted`                                    | FR-004      | example | DONE | `example/test/outcome_matrix_test.dart::request flow (FR-004) request with no prepared outcome defaults to granted` |
+| U33 | Requesting an already-decided scope (`granted`/`denied`/`restricted`/`limited`) returns the status unchanged (idempotent) | FR-004 | example | DONE | `example/test/outcome_matrix_test.dart::request flow (FR-004) request on an already-decided status returns it unchanged` |
 
 ### `example/lib/src/outcome_matrix_screen.dart` (settings routing)
 

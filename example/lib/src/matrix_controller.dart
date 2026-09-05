@@ -45,6 +45,12 @@ class MatrixController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Re-checks a single scope's current status without prompting.
+  Future<void> check(String scopeId) async {
+    _statuses[scopeId] = await service.check(scopeId);
+    notifyListeners();
+  }
+
   /// Places [scopeId] into [status] through the in-memory adapter seam —
   /// the cell the matrix grid taps. Any scope × status combination, on
   /// demand; a no-op against a real platform port.
@@ -55,4 +61,20 @@ class MatrixController extends ChangeNotifier {
     _statuses[scopeId] = status;
     notifyListeners();
   }
+
+  /// Requests [scopeId] through the public port — the real flow, whatever
+  /// adapter sits behind it: an undetermined scope resolves the prompt
+  /// outcome, an already-decided one returns unchanged, and a
+  /// permanently-denied one does not re-prompt (the caller routes to
+  /// [openSettings]).
+  Future<PermissionRequestResult> request(String scopeId) async {
+    final result = await service.request(scopeId);
+    _statuses[scopeId] = result.status;
+    notifyListeners();
+    return result;
+  }
+
+  /// Opens the OS settings page through the port; reports whether it could
+  /// be launched.
+  Future<bool> openSettings() => service.openSettings();
 }

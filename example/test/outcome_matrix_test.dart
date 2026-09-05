@@ -60,6 +60,30 @@ void main() {
         reason: 'the outcome-matrix section renders',
       );
     });
+
+    testWidgets('every built-in scope is exercisable end to end', (tester) async {
+      useLargeSurface(tester);
+      final service = await pumpMatrix(tester);
+      final adapter = adapterOf(service);
+      for (final scope in BuiltInPermissionScopes.all) {
+        await tap(tester, cell(scope.id, PermissionStatus.denied));
+        await tap(tester, find.byKey(ValueKey('request-${scope.id}')));
+        expect(
+          find.descendant(
+            of: statusChip(scope.id),
+            matching: find.text(PermissionStatus.denied.name),
+          ),
+          findsOneWidget,
+          reason: '${scope.id}: placed into a status and requested through '
+              'the real port',
+        );
+        expect(
+          await adapter.check(scope.id),
+          PermissionStatus.denied,
+          reason: '${scope.id}: the port recorded the outcome',
+        );
+      }
+    });
   });
 
   group('outcome matrix structure (FR-001/FR-002)', () {
@@ -115,6 +139,81 @@ void main() {
         );
       }
     });
+  });
+
+  group('request flow (FR-004)', () {
+    testWidgets(
+      'request on an undetermined scope resolves the prepared prompt outcome',
+      (tester) async {
+        useLargeSurface(tester);
+        final service = await pumpMatrix(tester);
+        final adapter = adapterOf(service);
+        adapter.setPromptOutcome('camera', PermissionStatus.denied);
+        await tap(tester, find.byKey(const ValueKey('request-camera')));
+        expect(
+          find.descendant(
+            of: statusChip('camera'),
+            matching: find.text(PermissionStatus.denied.name),
+          ),
+          findsOneWidget,
+          reason: 'the prompt outcome the adapter prepared is what shows',
+        );
+        expect(
+          await adapter.check('camera'),
+          PermissionStatus.denied,
+          reason: 'the resolved outcome is recorded (sticky)',
+        );
+      },
+    );
+
+    testWidgets('request with no prepared outcome defaults to granted', (
+      tester,
+    ) async {
+      useLargeSurface(tester);
+      final service = await pumpMatrix(tester);
+      final adapter = adapterOf(service);
+      await tap(tester, find.byKey(const ValueKey('request-photos')));
+      expect(
+        find.descendant(
+          of: statusChip('photos'),
+          matching: find.text(PermissionStatus.granted.name),
+        ),
+        findsOneWidget,
+        reason: 'the in-memory default prompt resolves to granted',
+      );
+      expect(
+        await adapter.check('photos'),
+        PermissionStatus.granted,
+        reason: 'the default outcome is recorded',
+      );
+    });
+
+    testWidgets(
+      'request on an already-decided status returns it unchanged',
+      (tester) async {
+        useLargeSurface(tester);
+        await pumpMatrix(tester);
+        const decided = [
+          PermissionStatus.granted,
+          PermissionStatus.denied,
+          PermissionStatus.restricted,
+          PermissionStatus.limited,
+        ];
+        for (final status in decided) {
+          await tap(tester, cell('microphone', status));
+          await tap(tester, find.byKey(const ValueKey('request-microphone')));
+          expect(
+            find.descendant(
+              of: statusChip('microphone'),
+              matching: find.text(status.name),
+            ),
+            findsOneWidget,
+            reason: 'request returns the decided ${status.name} unchanged '
+                '(idempotent)',
+          );
+        }
+      },
+    );
   });
 
   group('scope × status cells (FR-003)', () {

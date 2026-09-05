@@ -28,7 +28,7 @@
 
 ## Phase 2 — Request flow
 
-- [ ] 2.1 [P] [U31] [U32] [U33] [A2] Write the request-flow tests; observe red
+- [X] 2.1 [P] [U31] [U32] [U33] [A2] Write the request-flow tests; observe red
       (no request actions); implement `controller.request` + the per-scope
       exerciser rows. Green.
 

@@ -39,3 +39,17 @@ existed and failed before the implementation.
 - refactor: none yet — the exerciser and flow log land in cycles 2/3.
 - commit: (this commit)
 
+
+## Cycle 2: A2, U31, U32, U33 — the request flow
+
+- test: `example/test/outcome_matrix_test.dart` (added) — acceptance
+  every-scope-exercisable test + request-flow group (prompt outcome, default
+  granted, idempotent decided statuses).
+- red: `flutter test` -> 4 failed, 6 passed. The request buttons do not exist:
+  tapping `find.byKey(ValueKey('request-photos'))` threw `Bad state: No
+  element` (finder empty) — a real behavioral red.
+- green: `MatrixController.request`/`check` through the public port, plus the
+  per-scope exerciser (`scope_flow_tile.dart`: Check + Request actions, live
+  status, description) in the matrix panel. Suite -> 10 passed, 0 failed.
+- refactor: none needed.
+- commit: (this commit)
