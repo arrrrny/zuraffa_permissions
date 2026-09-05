@@ -32,7 +32,7 @@ end to end through its real entry point (the app root, real taps).
 
 | id  | behavior                                                                                                    | traces  | kind    | state   | test |
 | --- | ----------------------------------------------------------------------------------------------------------- | ------- | ------- | ------- | ---- |
-| A1  | The example app runs: it boots to the outcome-matrix home listing every built-in scope (compile/run evidence for the other platforms is the cycle log's `flutter build web` + platform scaffolding entries) | AC-001, FR-008 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the app boots to the outcome-matrix home` |
+| A1  | The example app runs: it boots to the outcome-matrix home listing every built-in scope (compile/run evidence for the other platforms is the cycle log's `flutter build web` + platform scaffolding entries) | AC-001, FR-008 | example | DONE | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the app boots to the outcome-matrix home` ||
 | A2  | Every built-in scope is exercisable: each of the eleven scopes can be placed into a status and requested through the real UI | AC-002, FR-001, FR-003, FR-004 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) every built-in scope is exercisable end to end` |
 | A3  | The outcome matrix visually displays status transitions: the active cell marker moves and the flow log records each from → to | AC-003, FR-002, FR-006 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the matrix visually displays status transitions` |
 | A4  | The permanentlyDenied path routes to settings: request does not re-prompt, Open Settings is offered, and the launch result is reported | AC-004, FR-005 | example | PENDING | `example/test/outcome_matrix_test.dart::acceptance (issue #7) the permanently denied path routes to settings` |
@@ -46,10 +46,10 @@ Grouped by the component that owns them. Ids continue the repository's `U` serie
 
 | id  | behavior                                                                                     | traces      | kind    | state   | test |
 | --- | -------------------------------------------------------------------------------------------- | ----------- | ------- | ------- | ---- |
-| U27 | The matrix renders a row for every built-in scope — all eleven ids, including the ten the issue names plus `tracking` | FR-001, AC-002 | example | PENDING | `example/test/outcome_matrix_test.dart::outcome matrix structure (FR-001/FR-002) renders a matrix row for every built-in scope` |
-| U28 | The matrix presents the six `PermissionStatus` values as columns, in enum order | FR-002, AC-003 | example | PENDING | `example/test/outcome_matrix_test.dart::outcome matrix structure (FR-001/FR-002) presents the six statuses as columns in enum order` |
-| U29 | Tapping a scope × status cell forces that combination: all 66 (11 × 6) combinations update the scope's status chip | FR-003, AC-002 | example | PENDING | `example/test/outcome_matrix_test.dart::scope × status cells (FR-003) every cell forces its scope into that status` |
-| U30 | The matrix marks the current combination: the active-cell marker sits in the forced status's cell and moves with it | FR-003, AC-003 | example | PENDING | `example/test/outcome_matrix_test.dart::scope × status cells (FR-003) the active cell marker tracks the forced status` |
+| U27 | The matrix renders a row for every built-in scope — all eleven ids, including the ten the issue names plus `tracking` | FR-001, AC-002 | example | DONE | `example/test/outcome_matrix_test.dart::outcome matrix structure (FR-001/FR-002) renders a matrix row for every built-in scope` |
+| U28 | The matrix presents the six `PermissionStatus` values as columns, in enum order | FR-002, AC-003 | example | DONE | `example/test/outcome_matrix_test.dart::outcome matrix structure (FR-001/FR-002) presents the six statuses as columns in enum order` |
+| U29 | Tapping a scope × status cell forces that combination: all 66 (11 × 6) combinations update the scope's status chip | FR-003, AC-002 | example | DONE | `example/test/outcome_matrix_test.dart::scope × status cells (FR-003) every cell forces its scope into that status` |
+| U30 | The matrix marks the current combination: the active-cell marker sits in the forced status's cell and moves with it | FR-003, AC-003 | example | DONE | `example/test/outcome_matrix_test.dart::scope × status cells (FR-003) the active cell marker tracks the forced status` |
 
 ### `example/lib/src/matrix_controller.dart` (request flow)
 

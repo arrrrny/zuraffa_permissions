@@ -17,12 +17,12 @@
 
 ## Phase 1 — Compile seam + acceptance shell
 
-- [ ] 1.1 [P] Add the compile seam so the new tests can fail behaviorally instead
+- [X] 1.1 [P] Add the compile seam so the new tests can fail behaviorally instead
       of at compile time: `PermissionApp({matrixService, liveService})`, an empty
       `OutcomeMatrixScreen` scaffold (AppBar title `zuraffa_permissions` preserved
       so the inherited baseline test U41 stays green), and a `MatrixController`
       skeleton. Suite stays green after this step.
-- [ ] 1.2 [P] [A1] [U27] [U28] [U29] [U30] Write the shell/matrix tests; observe
+- [ ] 1.2 [P] - [X] 1.2 [P] [A1] [U27] [U28] [U29] [U30] Write the shell/matrix tests; observe
       red; implement the matrix grid (rows = scopes, columns = the six statuses,
       force cells, active-cell marker) + controller state. Green.
 
