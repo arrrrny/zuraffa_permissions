@@ -1,0 +1,41 @@
+name: zuraffa_permissions_android
+description: The Android implementation of zuraffa_permissions (ActivityCompat-based).
+version: 1.0.0
+
+environment:
+  sdk: ^3.11.0
+  flutter: ">=3.41.0"
+
+flutter:
+  plugin:
+    implements: zuraffa_permissions
+    platforms:
+      android:
+        package: com.zuraffa.permissions
+        pluginClass: ZuraffaPermissionsPlugin
+        dartPluginClass: ZuraffaPermissionsAndroid
+
+dependencies:
+  flutter:
+    sdk: flutter
+  zuraffa_permissions: ^1.0.0
+  zuraffa_permissions_platform_interface: ^1.0.0
+
+dependency_overrides:
+  zuraffa_permissions:
+    path: ../zuraffa_permissions
+  zuraffa_permissions_platform_interface:
+    path: ../zuraffa_permissions_platform_interface
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+topics:
+  - permissions
+  - android
+  - zuraffa
+
+repository: https://github.com/arrrrny/zuraffa_permissions
+issue_tracker: https://github.com/arrrrny/zuraffa_permissions/issues

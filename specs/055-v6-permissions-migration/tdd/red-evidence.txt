@@ -1,0 +1,440 @@
+00:00 +0: loading /home/z/my-project/zuraffa_permissions/test/zuraffa_migration_test.dart
+test/zuraffa_migration_test.dart:15:26: Error: Method not found: 'Permission'.
+      final permission = Permission(
+                         ^^^^^^^^^^
+test/zuraffa_migration_test.dart:27:20: Error: Method not found: 'Role'.
+      final role = Role(
+                   ^^^^
+test/zuraffa_migration_test.dart:37:21: Error: Method not found: 'UserPermission'.
+      final grant = UserPermission(
+                    ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:47:26: Error: Method not found: 'UserRole'.
+      final assignment = UserRole(
+                         ^^^^^^^^
+test/zuraffa_migration_test.dart:57:20: Error: Method not found: 'RolePermission'.
+      final join = RolePermission(
+                   ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:66:20: Error: Method not found: 'Role'.
+      final role = Role(
+                   ^^^^
+test/zuraffa_migration_test.dart:71:24: Error: Undefined name 'Role'.
+      final restored = Role.fromJson(role.toJson());
+                       ^^^^
+test/zuraffa_migration_test.dart:75:26: Error: Method not found: 'Permission'.
+      final permission = Permission(
+                         ^^^^^^^^^^
+test/zuraffa_migration_test.dart:81:34: Error: Undefined name 'Permission'.
+      final restoredPermission = Permission.fromJson(permission.toJson());
+                                 ^^^^^^^^^^
+test/zuraffa_migration_test.dart:88:10: Error: 'InMemoryPermissionStoreDataSource' isn't a type.
+    late InMemoryPermissionStoreDataSource store;
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:89:10: Error: 'CheckPermissionUseCase' isn't a type.
+    late CheckPermissionUseCase checkPermission;
+         ^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:90:10: Error: 'AssignRoleToUserUseCase' isn't a type.
+    late AssignRoleToUserUseCase assignRole;
+         ^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:91:10: Error: 'RemoveRoleFromUserUseCase' isn't a type.
+    late RemoveRoleFromUserUseCase removeRole;
+         ^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:92:10: Error: 'GrantPermissionToUserUseCase' isn't a type.
+    late GrantPermissionToUserUseCase grantPermission;
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:93:10: Error: 'RevokePermissionFromUserUseCase' isn't a type.
+    late RevokePermissionFromUserUseCase revokePermission;
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:94:10: Error: 'ListUserPermissionsUseCase' isn't a type.
+    late ListUserPermissionsUseCase listUserPermissions;
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:95:10: Error: 'CreatePermissionUseCase' isn't a type.
+    late CreatePermissionUseCase createPermission;
+         ^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:96:10: Error: 'CreateRoleUseCase' isn't a type.
+    late CreateRoleUseCase createRole;
+         ^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:97:10: Error: 'GrantPermissionToRoleUseCase' isn't a type.
+    late GrantPermissionToRoleUseCase grantPermissionToRole;
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:100:15: Error: Method not found: 'InMemoryPermissionStoreDataSource'.
+      store = InMemoryPermissionStoreDataSource();
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:101:30: Error: Method not found: 'DataPermissionRepository'.
+      final permissionRepo = DataPermissionRepository(store);
+                             ^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:102:24: Error: Method not found: 'DataRoleRepository'.
+      final roleRepo = DataRoleRepository(store);
+                       ^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:103:34: Error: Method not found: 'DataUserPermissionRepository'.
+      final userPermissionRepo = DataUserPermissionRepository(store);
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:104:28: Error: Method not found: 'DataUserRoleRepository'.
+      final userRoleRepo = DataUserRoleRepository(store);
+                           ^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:105:34: Error: Method not found: 'DataRolePermissionRepository'.
+      final rolePermissionRepo = DataRolePermissionRepository(store);
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:107:26: Error: Method not found: 'CreatePermissionUseCase'.
+      createPermission = CreatePermissionUseCase(permissionRepo);
+                         ^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:108:20: Error: Method not found: 'CreateRoleUseCase'.
+      createRole = CreateRoleUseCase(roleRepo);
+                   ^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:109:31: Error: Method not found: 'GrantPermissionToRoleUseCase'.
+      grantPermissionToRole = GrantPermissionToRoleUseCase(rolePermissionRepo);
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:110:25: Error: Method not found: 'CheckPermissionUseCase'.
+      checkPermission = CheckPermissionUseCase(
+                        ^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:115:20: Error: Method not found: 'AssignRoleToUserUseCase'.
+      assignRole = AssignRoleToUserUseCase(userRoleRepo);
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:116:20: Error: Method not found: 'RemoveRoleFromUserUseCase'.
+      removeRole = RemoveRoleFromUserUseCase(userRoleRepo);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:117:25: Error: Method not found: 'GrantPermissionToUserUseCase'.
+      grantPermission = GrantPermissionToUserUseCase(userPermissionRepo);
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:118:26: Error: Method not found: 'RevokePermissionFromUserUseCase'.
+      revokePermission = RevokePermissionFromUserUseCase(userPermissionRepo);
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:119:29: Error: Method not found: 'ListUserPermissionsUseCase'.
+      listUserPermissions = ListUserPermissionsUseCase(
+                            ^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:127:9: Error: Method not found: 'Permission'.
+        Permission(
+        ^^^^^^^^^^
+test/zuraffa_migration_test.dart:136:9: Error: Method not found: 'Permission'.
+        Permission(
+        ^^^^^^^^^^
+test/zuraffa_migration_test.dart:145:9: Error: Method not found: 'Role'.
+        Role(id: 'role.publisher', name: 'Publisher', description: ''),
+        ^^^^
+test/zuraffa_migration_test.dart:149:9: Error: Method not found: 'RolePermission'.
+        RolePermission(roleId: 'role.publisher', permissionId: 'perm.article.publish'),
+        ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:156:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+        const CheckPermissionParams(
+              ^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:167:9: Error: Method not found: 'UserPermission'.
+        UserPermission(
+        ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:175:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+        const CheckPermissionParams(
+              ^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:186:9: Error: Method not found: 'UserRole'.
+        UserRole(
+        ^^^^^^^^
+test/zuraffa_migration_test.dart:194:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+        const CheckPermissionParams(
+              ^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:205:9: Error: Method not found: 'UserPermission'.
+        UserPermission(
+        ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:213:15: Error: Couldn't find constructor 'RevokePermissionParams'.
+        const RevokePermissionParams(userId: 'user-3', permissionId: 'perm.camera.read'),
+              ^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:217:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+        const CheckPermissionParams(
+              ^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:228:9: Error: Method not found: 'UserRole'.
+        UserRole(
+        ^^^^^^^^
+test/zuraffa_migration_test.dart:236:15: Error: Couldn't find constructor 'RemoveRoleParams'.
+        const RemoveRoleParams(userId: 'user-4', roleId: 'role.publisher'),
+              ^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:240:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+        const CheckPermissionParams(
+              ^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:252:9: Error: Method not found: 'UserPermission'.
+        UserPermission(
+        ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:260:9: Error: Method not found: 'UserRole'.
+        UserRole(
+        ^^^^^^^^
+test/zuraffa_migration_test.dart:268:9: Error: Method not found: 'UserPermission'.
+        UserPermission(
+        ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:276:15: Error: Couldn't find constructor 'ListUserPermissionsParams'.
+        const ListUserPermissionsParams(userId: 'user-5'),
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:291:33: Error: 'CheckPermissionUseCase' isn't a type.
+      expect(getIt.isRegistered<CheckPermissionUseCase>(), isTrue);
+                                ^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:292:33: Error: 'AssignRoleToUserUseCase' isn't a type.
+      expect(getIt.isRegistered<AssignRoleToUserUseCase>(), isTrue);
+                                ^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:293:33: Error: 'ListUserPermissionsUseCase' isn't a type.
+      expect(getIt.isRegistered<ListUserPermissionsUseCase>(), isTrue);
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:294:33: Error: 'PermissionRepository' isn't a type.
+      expect(getIt.isRegistered<PermissionRepository>(), isTrue);
+                                ^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:295:33: Error: 'RoleRepository' isn't a type.
+      expect(getIt.isRegistered<RoleRepository>(), isTrue);
+                                ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:297:27: Error: 'CheckPermissionUseCase' isn't a type.
+      final check = getIt<CheckPermissionUseCase>();
+                          ^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:298:39: Error: 'CheckPermissionParams' isn't a type.
+      expect(check, isA<UseCase<bool, CheckPermissionParams>>());
+                                      ^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:298:25: Error: 'UseCase' isn't a type.
+      expect(check, isA<UseCase<bool, CheckPermissionParams>>());
+                        ^^^^^^^
+test/zuraffa_migration_test.dart:305:20: Error: 'InMemoryPermissionStoreDataSource' isn't a type.
+      expect(getIt<InMemoryPermissionStoreDataSource>(), isNotNull);
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:313:14: Error: Undefined name 'Permission'.
+      expect(Permission, isNotNull);
+             ^^^^^^^^^^
+test/zuraffa_migration_test.dart:314:14: Error: Undefined name 'Role'.
+      expect(Role, isNotNull);
+             ^^^^
+test/zuraffa_migration_test.dart:315:14: Error: Undefined name 'UserPermission'.
+      expect(UserPermission, isNotNull);
+             ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:316:14: Error: Undefined name 'UserRole'.
+      expect(UserRole, isNotNull);
+             ^^^^^^^^
+test/zuraffa_migration_test.dart:317:14: Error: Undefined name 'RolePermission'.
+      expect(RolePermission, isNotNull);
+             ^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:318:14: Error: Undefined name 'InMemoryPermissionStoreDataSource'.
+      expect(InMemoryPermissionStoreDataSource, isNotNull);
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:319:14: Error: Undefined name 'CheckPermissionUseCase'.
+      expect(CheckPermissionUseCase, isNotNull);
+             ^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:320:14: Error: Undefined name 'CheckPermissionParams'.
+      expect(CheckPermissionParams, isNotNull);
+             ^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:321:14: Error: Undefined name 'AssignRoleToUserUseCase'.
+      expect(AssignRoleToUserUseCase, isNotNull);
+             ^^^^^^^^^^^^^^^^^^^^^^^
+test/zuraffa_migration_test.dart:322:14: Error: Undefined name 'RevokePermissionFromUserUseCase'.
+      expect(RevokePermissionFromUserUseCase, isNotNull);
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+00:00 +0 -1: loading /home/z/my-project/zuraffa_permissions/test/zuraffa_migration_test.dart [E]
+  Failed to load "/home/z/my-project/zuraffa_permissions/test/zuraffa_migration_test.dart":
+  Compilation failed for testPath=/home/z/my-project/zuraffa_permissions/test/zuraffa_migration_test.dart: test/zuraffa_migration_test.dart:15:26: Error: Method not found: 'Permission'.
+        final permission = Permission(
+                           ^^^^^^^^^^
+  test/zuraffa_migration_test.dart:27:20: Error: Method not found: 'Role'.
+        final role = Role(
+                     ^^^^
+  test/zuraffa_migration_test.dart:37:21: Error: Method not found: 'UserPermission'.
+        final grant = UserPermission(
+                      ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:47:26: Error: Method not found: 'UserRole'.
+        final assignment = UserRole(
+                           ^^^^^^^^
+  test/zuraffa_migration_test.dart:57:20: Error: Method not found: 'RolePermission'.
+        final join = RolePermission(
+                     ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:66:20: Error: Method not found: 'Role'.
+        final role = Role(
+                     ^^^^
+  test/zuraffa_migration_test.dart:71:24: Error: Undefined name 'Role'.
+        final restored = Role.fromJson(role.toJson());
+                         ^^^^
+  test/zuraffa_migration_test.dart:75:26: Error: Method not found: 'Permission'.
+        final permission = Permission(
+                           ^^^^^^^^^^
+  test/zuraffa_migration_test.dart:81:34: Error: Undefined name 'Permission'.
+        final restoredPermission = Permission.fromJson(permission.toJson());
+                                   ^^^^^^^^^^
+  test/zuraffa_migration_test.dart:88:10: Error: 'InMemoryPermissionStoreDataSource' isn't a type.
+      late InMemoryPermissionStoreDataSource store;
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:89:10: Error: 'CheckPermissionUseCase' isn't a type.
+      late CheckPermissionUseCase checkPermission;
+           ^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:90:10: Error: 'AssignRoleToUserUseCase' isn't a type.
+      late AssignRoleToUserUseCase assignRole;
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:91:10: Error: 'RemoveRoleFromUserUseCase' isn't a type.
+      late RemoveRoleFromUserUseCase removeRole;
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:92:10: Error: 'GrantPermissionToUserUseCase' isn't a type.
+      late GrantPermissionToUserUseCase grantPermission;
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:93:10: Error: 'RevokePermissionFromUserUseCase' isn't a type.
+      late RevokePermissionFromUserUseCase revokePermission;
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:94:10: Error: 'ListUserPermissionsUseCase' isn't a type.
+      late ListUserPermissionsUseCase listUserPermissions;
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:95:10: Error: 'CreatePermissionUseCase' isn't a type.
+      late CreatePermissionUseCase createPermission;
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:96:10: Error: 'CreateRoleUseCase' isn't a type.
+      late CreateRoleUseCase createRole;
+           ^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:97:10: Error: 'GrantPermissionToRoleUseCase' isn't a type.
+      late GrantPermissionToRoleUseCase grantPermissionToRole;
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:100:15: Error: Method not found: 'InMemoryPermissionStoreDataSource'.
+        store = InMemoryPermissionStoreDataSource();
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:101:30: Error: Method not found: 'DataPermissionRepository'.
+        final permissionRepo = DataPermissionRepository(store);
+                               ^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:102:24: Error: Method not found: 'DataRoleRepository'.
+        final roleRepo = DataRoleRepository(store);
+                         ^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:103:34: Error: Method not found: 'DataUserPermissionRepository'.
+        final userPermissionRepo = DataUserPermissionRepository(store);
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:104:28: Error: Method not found: 'DataUserRoleRepository'.
+        final userRoleRepo = DataUserRoleRepository(store);
+                             ^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:105:34: Error: Method not found: 'DataRolePermissionRepository'.
+        final rolePermissionRepo = DataRolePermissionRepository(store);
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:107:26: Error: Method not found: 'CreatePermissionUseCase'.
+        createPermission = CreatePermissionUseCase(permissionRepo);
+                           ^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:108:20: Error: Method not found: 'CreateRoleUseCase'.
+        createRole = CreateRoleUseCase(roleRepo);
+                     ^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:109:31: Error: Method not found: 'GrantPermissionToRoleUseCase'.
+        grantPermissionToRole = GrantPermissionToRoleUseCase(rolePermissionRepo);
+                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:110:25: Error: Method not found: 'CheckPermissionUseCase'.
+        checkPermission = CheckPermissionUseCase(
+                          ^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:115:20: Error: Method not found: 'AssignRoleToUserUseCase'.
+        assignRole = AssignRoleToUserUseCase(userRoleRepo);
+                     ^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:116:20: Error: Method not found: 'RemoveRoleFromUserUseCase'.
+        removeRole = RemoveRoleFromUserUseCase(userRoleRepo);
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:117:25: Error: Method not found: 'GrantPermissionToUserUseCase'.
+        grantPermission = GrantPermissionToUserUseCase(userPermissionRepo);
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:118:26: Error: Method not found: 'RevokePermissionFromUserUseCase'.
+        revokePermission = RevokePermissionFromUserUseCase(userPermissionRepo);
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:119:29: Error: Method not found: 'ListUserPermissionsUseCase'.
+        listUserPermissions = ListUserPermissionsUseCase(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:127:9: Error: Method not found: 'Permission'.
+          Permission(
+          ^^^^^^^^^^
+  test/zuraffa_migration_test.dart:136:9: Error: Method not found: 'Permission'.
+          Permission(
+          ^^^^^^^^^^
+  test/zuraffa_migration_test.dart:145:9: Error: Method not found: 'Role'.
+          Role(id: 'role.publisher', name: 'Publisher', description: ''),
+          ^^^^
+  test/zuraffa_migration_test.dart:149:9: Error: Method not found: 'RolePermission'.
+          RolePermission(roleId: 'role.publisher', permissionId: 'perm.article.publish'),
+          ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:156:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+          const CheckPermissionParams(
+                ^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:167:9: Error: Method not found: 'UserPermission'.
+          UserPermission(
+          ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:175:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+          const CheckPermissionParams(
+                ^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:186:9: Error: Method not found: 'UserRole'.
+          UserRole(
+          ^^^^^^^^
+  test/zuraffa_migration_test.dart:194:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+          const CheckPermissionParams(
+                ^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:205:9: Error: Method not found: 'UserPermission'.
+          UserPermission(
+          ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:213:15: Error: Couldn't find constructor 'RevokePermissionParams'.
+          const RevokePermissionParams(userId: 'user-3', permissionId: 'perm.camera.read'),
+                ^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:217:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+          const CheckPermissionParams(
+                ^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:228:9: Error: Method not found: 'UserRole'.
+          UserRole(
+          ^^^^^^^^
+  test/zuraffa_migration_test.dart:236:15: Error: Couldn't find constructor 'RemoveRoleParams'.
+          const RemoveRoleParams(userId: 'user-4', roleId: 'role.publisher'),
+                ^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:240:15: Error: Couldn't find constructor 'CheckPermissionParams'.
+          const CheckPermissionParams(
+                ^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:252:9: Error: Method not found: 'UserPermission'.
+          UserPermission(
+          ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:260:9: Error: Method not found: 'UserRole'.
+          UserRole(
+          ^^^^^^^^
+  test/zuraffa_migration_test.dart:268:9: Error: Method not found: 'UserPermission'.
+          UserPermission(
+          ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:276:15: Error: Couldn't find constructor 'ListUserPermissionsParams'.
+          const ListUserPermissionsParams(userId: 'user-5'),
+                ^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:291:33: Error: 'CheckPermissionUseCase' isn't a type.
+        expect(getIt.isRegistered<CheckPermissionUseCase>(), isTrue);
+                                  ^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:292:33: Error: 'AssignRoleToUserUseCase' isn't a type.
+        expect(getIt.isRegistered<AssignRoleToUserUseCase>(), isTrue);
+                                  ^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:293:33: Error: 'ListUserPermissionsUseCase' isn't a type.
+        expect(getIt.isRegistered<ListUserPermissionsUseCase>(), isTrue);
+                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:294:33: Error: 'PermissionRepository' isn't a type.
+        expect(getIt.isRegistered<PermissionRepository>(), isTrue);
+                                  ^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:295:33: Error: 'RoleRepository' isn't a type.
+        expect(getIt.isRegistered<RoleRepository>(), isTrue);
+                                  ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:297:27: Error: 'CheckPermissionUseCase' isn't a type.
+        final check = getIt<CheckPermissionUseCase>();
+                            ^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:298:39: Error: 'CheckPermissionParams' isn't a type.
+        expect(check, isA<UseCase<bool, CheckPermissionParams>>());
+                                        ^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:298:25: Error: 'UseCase' isn't a type.
+        expect(check, isA<UseCase<bool, CheckPermissionParams>>());
+                          ^^^^^^^
+  test/zuraffa_migration_test.dart:305:20: Error: 'InMemoryPermissionStoreDataSource' isn't a type.
+        expect(getIt<InMemoryPermissionStoreDataSource>(), isNotNull);
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:313:14: Error: Undefined name 'Permission'.
+        expect(Permission, isNotNull);
+               ^^^^^^^^^^
+  test/zuraffa_migration_test.dart:314:14: Error: Undefined name 'Role'.
+        expect(Role, isNotNull);
+               ^^^^
+  test/zuraffa_migration_test.dart:315:14: Error: Undefined name 'UserPermission'.
+        expect(UserPermission, isNotNull);
+               ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:316:14: Error: Undefined name 'UserRole'.
+        expect(UserRole, isNotNull);
+               ^^^^^^^^
+  test/zuraffa_migration_test.dart:317:14: Error: Undefined name 'RolePermission'.
+        expect(RolePermission, isNotNull);
+               ^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:318:14: Error: Undefined name 'InMemoryPermissionStoreDataSource'.
+        expect(InMemoryPermissionStoreDataSource, isNotNull);
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:319:14: Error: Undefined name 'CheckPermissionUseCase'.
+        expect(CheckPermissionUseCase, isNotNull);
+               ^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:320:14: Error: Undefined name 'CheckPermissionParams'.
+        expect(CheckPermissionParams, isNotNull);
+               ^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:321:14: Error: Undefined name 'AssignRoleToUserUseCase'.
+        expect(AssignRoleToUserUseCase, isNotNull);
+               ^^^^^^^^^^^^^^^^^^^^^^^
+  test/zuraffa_migration_test.dart:322:14: Error: Undefined name 'RevokePermissionFromUserUseCase'.
+        expect(RevokePermissionFromUserUseCase, isNotNull);
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  .
+00:00 +0 -1: Some tests failed.
+
+Failing tests:
+  /home/z/my-project/zuraffa_permissions/test/zuraffa_migration_test.dart: loading /home/z/my-project/zuraffa_permissions/test/zuraffa_migration_test.dart
