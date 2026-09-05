@@ -59,7 +59,24 @@
 
 ## Phase 7 — TDD verify
 
-- [ ] 7.1 [P] Cold-context audit per `.specify/extensions/tdd/commands/speckit.tdd.verify.md`
-      (smell pass delegated to a fresh-context subagent; deliberate mutants for the
-      example sources); write `tdd/verification.md` with the verdict; remediate if
-      needed; commit.
+- [X] 7.1 [P] Cold-context audit per `.specify/extensions/tdd/commands/speckit.tdd.verify.md`
+      (smell pass delegated to a fresh-context subagent; mutation_test 1.8.0
+      scoped to the example sources); write `tdd/verification.md` with the verdict;
+      remediate if needed; commit.
+
+## Phase 8 — TDD remediation (from /speckit.tdd.verify)
+
+Findings 1–3 below were remediated in the same session (the audit's findings;
+fixing them is this phase's work). All three re-verified: suite 22/22, and the
+targeted mutation re-run kills every real survivor (27/27, quality A).
+
+- [X] 8.1 [P] (finding 2) Exercise the per-scope Check action: external status
+      change → tap Check → chip + log. Proves it: `flutter test --name "the
+      per-scope Check action"` and the tile file's mutation re-run
+      (check-key mutant now detected).
+- [X] 8.2 [P] (finding 3) Pin the mode-chip label (`simulator: in-memory
+      adapter`). Proves it: `flutter test --name "the mode chip"` and the
+      screen file's mutation re-run (label mutant now detected).
+- [X] 8.3 [P] (finding 1) Pin the flow-log record at a pure-Dart (non-widget)
+      level so the A/U loops are no longer the same level. Proves it:
+      `flutter test --name "force → request → openSettings produce"`.

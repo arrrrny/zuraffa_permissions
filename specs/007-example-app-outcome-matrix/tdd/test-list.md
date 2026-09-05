@@ -4,7 +4,7 @@ loop: outside-in # user-visible surface: the example app's screens are the entry
 profile: .specify/memory/tdd-profile.md # stack profile the commands must read
 spec_criteria: 4 # AC-001..AC-004 from issue #7; FR-001..FR-008 back them
 planned_at: 0a13799 # short SHA the list was derived from
-updated_at: 0a13799 # short SHA of the last change (planning; states move per cycle)
+updated_at: 17452d5 # short SHA of the last change (states move per cycle; remediation rows U42-U44 appended in the Phase 8 working tree)
 suite_baseline: green # root dart test 22/22; example flutter test 1/1
 ---
 
@@ -81,6 +81,9 @@ Grouped by the component that owns them. Ids continue the repository's `U` serie
 | --- | -------------------------------------------------------------------------------------------- | ----------- | ------- | ------- | ---- |
 | U40 | The live tab renders the live service's scopes with check/request actions (the GetIt wiring itself is covered by the inherited baseline test U41) | FR-007 | example | DONE | `example/test/outcome_matrix_test.dart::live tab (FR-007) the live tab renders the live service's scopes with check and request actions` |
 | U41 | Existing baseline: `registerPermissionDependencies` wires the stack onto GetIt and the app renders (unchanged, inherited) | FR-007 | example | BASELINE | `example/test/widget_test.dart::permission app renders and wires the service` |
+| U42 | The per-scope Check action re-reads the port (an externally set status shows) and is logged — remediation for the `check-${scope}` key mutation survivor | FR-004, FR-006 | example | DONE | `example/test/outcome_matrix_test.dart::remediation (Phase 8 — mutation survivors) the per-scope Check action re-reads the port and logs it` |
+| U43 | The simulator mode chip names the running adapter truthfully — remediation for the label mutation survivor | FR-007 | example | DONE | `example/test/outcome_matrix_test.dart::remediation (Phase 8 — mutation survivors) the mode chip names the running adapter` |
+| U44 | The controller's event record is the from → to transition sequence for force → request → openSettings, asserted at the pure-Dart (non-widget) level — remediation for the same-level redundancy finding | FR-006 | example | DONE | `example/test/outcome_matrix_test.dart::controller-level events (remediation R3 — non-widget level) force → request → openSettings produce the transition record` |
 
 ## Invariants and edge cases still to place
 

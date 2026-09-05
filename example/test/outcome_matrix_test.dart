@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:zuraffa_permissions/zuraffa_permissions.dart';
 
 import 'package:example/main.dart';
+import 'package:example/src/matrix_controller.dart';
 
 /// The outcome-matrix demonstrator's widget suite (issue #7).
 ///
@@ -451,6 +452,68 @@ void main() {
         reason: 'a live request resolves through the port',
       );
     });
+  });
+
+  group('remediation (Phase 8 — mutation survivors)', () {
+    testWidgets('the per-scope Check action re-reads the port and logs it', (
+      tester,
+    ) async {
+      useLargeSurface(tester);
+      final service = await pumpMatrix(tester);
+      final adapter = adapterOf(service);
+      // External state change (as if the user flipped it in OS settings):
+      adapter.setStatus('camera', PermissionStatus.limited);
+      await tap(tester, find.byKey(const ValueKey('check-camera')));
+      expect(
+        find.descendant(
+          of: statusChip('camera'),
+          matching: find.text(PermissionStatus.limited.name),
+        ),
+        findsOneWidget,
+        reason: 'Check re-reads the port, so the externally set status shows',
+      );
+      expect(
+        find.text('check camera → limited'),
+        findsOneWidget,
+        reason: 'the manual check is logged',
+      );
+    });
+
+    testWidgets('the mode chip names the running adapter', (tester) async {
+      useLargeSurface(tester);
+      await pumpMatrix(tester);
+      expect(
+        find.text('simulator: in-memory adapter'),
+        findsOneWidget,
+        reason: 'the simulator tab identifies its adapter truthfully',
+      );
+    });
+  });
+
+  group('controller-level events (remediation R3 — non-widget level)', () {
+    test(
+      'force → request → openSettings produce the transition record',
+      () async {
+        final service = PermissionService(port: InMemoryPermissionAdapter());
+        final controller = MatrixController(service: service);
+        await controller.checkAll();
+        controller.forceStatus('camera', PermissionStatus.permanentlyDenied);
+        await controller.request('camera');
+        await controller.openSettings();
+
+        expect(
+          controller.events.map((event) => event.label).toList(),
+          containsAllInOrder([
+            'check camera → undetermined',
+            'set camera: undetermined → permanentlyDenied',
+            'request camera: permanentlyDenied → permanentlyDenied',
+            'openSettings: launched',
+          ]),
+          reason: 'the flow log record is the from → to transition sequence',
+        );
+        controller.dispose();
+      },
+    );
   });
 
   group('scope × status cells (FR-003)', () {

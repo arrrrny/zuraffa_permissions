@@ -110,3 +110,43 @@ existed and failed before the implementation.
   `dart format --output=none --set-exit-if-changed .` -> 0 changed, exit 0
   (zero remaining formatting diffs).
 - Post-format re-run of both suites: still 22/22 and 19/19.
+
+## Phase 7: TDD verify (the audit)
+
+- smell pass: delegated to a fresh-context subagent (Task 7-a). Result: 0 HIGH,
+  1 MED (same-level A/U redundancy), all 19 then-rows traceable, inherited
+  `widget_test.dart` byte-identical to baseline, properties (isolation,
+  determinism, speed, specificity, refactor-insensitivity) all pass.
+- mutation (mutation_test 1.8.0, builtin rules, command
+  `flutter test test/outcome_matrix_test.dart`, run from `example/` via XML
+  config — recorded below): scoped to the 7 feature files.
+  - batch 1 `matrix_controller.dart`: 8 mutants, 0 undetected (A).
+  - batch 2 `scope_flow_tile.dart` + `flow_log_view.dart` + `main.dart`:
+    14 mutants, 3 undetected (tile check-key 1; main entry-point 2).
+  - batch 3 `matrix_grid.dart` + `outcome_matrix_screen.dart`: 34 mutants,
+    4 undetected (grid style 3; screen mode-chip label 1).
+  - batch 4 `live_permission_panel.dart`: 20 mutants, 10 undetected
+    (mounted-guards 3; prose strings 5; style 2).
+  - total: 76 mutants, 17 undetected; 2 map to real unasserted affordances,
+    15 triaged equivalent-in-context (style/prose/guards/entry-point).
+- verdict: PASS (report: `tdd/verification.md`).
+
+## Phase 8: remediation (R1–R3) + re-verification
+
+- R1 (U42): Check-action test — brownfield additive (the affordance shipped in
+  cycle 2 untested); passed on first run; meaning validated by the mutation
+  re-run (the `check+` key mutant is now detected).
+- R2 (U43): mode-chip label test — same shape; the `in+memory` label mutant is
+  now detected.
+- R3 (U44): controller-level (pure Dart, non-widget) test of the flow-log
+  event record — addresses the MED same-level redundancy finding by pinning
+  the behavior at a different loop.
+- suite after remediation: `flutter test` (example) -> 22 passed, 0 failed;
+  `dart test` (root) -> 22 passed, 0 failed.
+- mutation re-run (tile + screen + controller): 27 mutants, 0 undetected
+  (100%, quality A).
+- mutation config used (recorded for reproducibility):
+  `mutation_test -b <config>` from `example/`, with
+  `<commands><command group="test" expected-return="0"
+  working-directory=".">flutter test test/outcome_matrix_test.dart
+  </command></commands>` and the `<files>` list per batch above.
