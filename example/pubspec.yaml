@@ -33,6 +33,11 @@ dependencies:
 
   cupertino_icons: ^1.0.8
 
+  # The app-facing GetIt the example wires directly (registerPermissionDependencies).
+  get_it: ^9.2.1
+  # Re-exports GetIt / the DI surface the example's own wiring uses.
+  zuraffa: ^6.1.0
+
   # The federated plugin under test (app-facing + platform siblings).
   zuraffa_permissions:
     path: ../

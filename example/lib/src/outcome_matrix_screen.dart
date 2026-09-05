@@ -49,12 +49,19 @@ class _OutcomeMatrixScreenState extends State<OutcomeMatrixScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text('zuraffa_permissions'),
-          bottom: const TabBar(tabs: [Tab(text: 'Matrix'), Tab(text: 'Live')]),
+          bottom: const TabBar(
+            tabs: [
+              Tab(text: 'Matrix'),
+              Tab(text: 'Live'),
+            ],
+          ),
         ),
-        body: TabBarView(children: [
-          MatrixPanel(controller: _controller),
-          LivePermissionPanel(service: widget.liveService),
-        ]),
+        body: TabBarView(
+          children: [
+            MatrixPanel(controller: _controller),
+            LivePermissionPanel(service: widget.liveService),
+          ],
+        ),
       ),
     );
   }

@@ -137,7 +137,9 @@ class _ScopeRow extends StatelessWidget {
               scopeId: scope.id,
               status: status,
               active: status == current,
-              onTap: canForce ? () => controller.forceStatus(scope.id, status) : null,
+              onTap: canForce
+                  ? () => controller.forceStatus(scope.id, status)
+                  : null,
             ),
         ],
       ),
@@ -170,7 +172,10 @@ class _StatusCell extends StatelessWidget {
         decoration: BoxDecoration(
           color: active ? color.withValues(alpha: 0.18) : null,
           border: Border(
-            right: BorderSide(color: Theme.of(context).dividerColor, width: 0.5),
+            right: BorderSide(
+              color: Theme.of(context).dividerColor,
+              width: 0.5,
+            ),
           ),
         ),
         child: active
@@ -212,9 +217,8 @@ class StatusBadge extends StatelessWidget {
             child: Text(
               status.name,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(
-                context,
-              ).textTheme.labelSmall?.copyWith(color: color, fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.labelSmall
+                  ?.copyWith(color: color, fontWeight: FontWeight.w700),
             ),
           ),
         ],

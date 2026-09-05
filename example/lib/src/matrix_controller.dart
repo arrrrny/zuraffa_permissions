@@ -27,7 +27,9 @@ class FlowEvent {
     FlowEventKind.forced => 'set $scope: ${from!.name} → ${to!.name}',
     FlowEventKind.requested => 'request $scope: ${from!.name} → ${to!.name}',
     FlowEventKind.settingsOpened =>
-      (launched ?? false) ? 'openSettings: launched' : 'openSettings: unavailable',
+      (launched ?? false)
+          ? 'openSettings: launched'
+          : 'openSettings: unavailable',
   };
 }
 
@@ -81,7 +83,9 @@ class MatrixController extends ChangeNotifier {
   /// Re-checks a single scope's current status without prompting.
   Future<void> check(String scopeId) async {
     final status = await service.check(scopeId);
-    events.add(FlowEvent(kind: FlowEventKind.check, scope: scopeId, to: status));
+    events.add(
+      FlowEvent(kind: FlowEventKind.check, scope: scopeId, to: status),
+    );
     _statuses[scopeId] = status;
     notifyListeners();
   }
@@ -96,7 +100,12 @@ class MatrixController extends ChangeNotifier {
     adapter.setStatus(scopeId, status);
     _statuses[scopeId] = status;
     events.add(
-      FlowEvent(kind: FlowEventKind.forced, scope: scopeId, from: from, to: status),
+      FlowEvent(
+        kind: FlowEventKind.forced,
+        scope: scopeId,
+        from: from,
+        to: status,
+      ),
     );
     notifyListeners();
   }
@@ -126,7 +135,9 @@ class MatrixController extends ChangeNotifier {
   /// be launched.
   Future<bool> openSettings() async {
     final launched = await service.openSettings();
-    events.add(FlowEvent(kind: FlowEventKind.settingsOpened, launched: launched));
+    events.add(
+      FlowEvent(kind: FlowEventKind.settingsOpened, launched: launched),
+    );
     notifyListeners();
     return launched;
   }

@@ -122,7 +122,8 @@ class _LivePermissionPanelState extends State<LivePermissionPanel> {
                       _LiveStatusBadge(
                         scopeId: scope.id,
                         status:
-                            _statuses[scope.id] ?? PermissionStatus.undetermined,
+                            _statuses[scope.id] ??
+                            PermissionStatus.undetermined,
                       ),
                     ],
                   ),
@@ -189,10 +190,8 @@ class _LiveStatusBadge extends StatelessWidget {
           const SizedBox(width: 3),
           Text(
             status.name,
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: color,
-              fontWeight: FontWeight.w700,
-            ),
+            style: Theme.of(context).textTheme.labelSmall
+                ?.copyWith(color: color, fontWeight: FontWeight.w700),
           ),
         ],
       ),

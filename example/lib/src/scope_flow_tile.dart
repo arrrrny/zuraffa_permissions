@@ -8,7 +8,11 @@ import 'status_theme.dart';
 /// check → request → (open settings when permanently denied) actions —
 /// every step through the public [PermissionService] API.
 class ScopeFlowTile extends StatelessWidget {
-  const ScopeFlowTile({super.key, required this.scope, required this.controller});
+  const ScopeFlowTile({
+    super.key,
+    required this.scope,
+    required this.controller,
+  });
 
   final PermissionScope scope;
   final MatrixController controller;
@@ -44,9 +48,8 @@ class ScopeFlowTile extends StatelessWidget {
                 ),
                 Text(
                   status.name,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.labelMedium?.copyWith(color: color, fontWeight: FontWeight.w700),
+                  style: Theme.of(context).textTheme.labelMedium
+                      ?.copyWith(color: color, fontWeight: FontWeight.w700),
                 ),
               ],
             ),

@@ -52,7 +52,11 @@ void main() {
         findsOneWidget,
         reason: 'the app bar title renders',
       );
-      expect(find.text('Matrix'), findsOneWidget, reason: 'simulator tab renders');
+      expect(
+        find.text('Matrix'),
+        findsOneWidget,
+        reason: 'simulator tab renders',
+      );
       expect(find.text('Live'), findsOneWidget, reason: 'live tab renders');
       expect(
         find.text('Outcome matrix — every scope × status'),
@@ -61,7 +65,9 @@ void main() {
       );
     });
 
-    testWidgets('every built-in scope is exercisable end to end', (tester) async {
+    testWidgets('every built-in scope is exercisable end to end', (
+      tester,
+    ) async {
       useLargeSurface(tester);
       final service = await pumpMatrix(tester);
       final adapter = adapterOf(service);
@@ -74,7 +80,8 @@ void main() {
             matching: find.text(PermissionStatus.denied.name),
           ),
           findsOneWidget,
-          reason: '${scope.id}: placed into a status and requested through '
+          reason:
+              '${scope.id}: placed into a status and requested through '
               'the real port',
         );
         expect(
@@ -85,20 +92,28 @@ void main() {
       }
     });
 
-    testWidgets('the matrix visually displays status transitions', (tester) async {
+    testWidgets('the matrix visually displays status transitions', (
+      tester,
+    ) async {
       useLargeSurface(tester);
       final service = await pumpMatrix(tester);
       final adapter = adapterOf(service);
       adapter.setPromptOutcome('notifications', PermissionStatus.denied);
       final dot = find.byKey(const ValueKey('matrix-active-dot-notifications'));
       expect(
-        find.ancestor(of: dot, matching: cell('notifications', PermissionStatus.undetermined)),
+        find.ancestor(
+          of: dot,
+          matching: cell('notifications', PermissionStatus.undetermined),
+        ),
         findsOneWidget,
         reason: 'the marker starts in the undetermined column',
       );
       await tap(tester, find.byKey(const ValueKey('request-notifications')));
       expect(
-        find.ancestor(of: dot, matching: cell('notifications', PermissionStatus.denied)),
+        find.ancestor(
+          of: dot,
+          matching: cell('notifications', PermissionStatus.denied),
+        ),
         findsOneWidget,
         reason: 'the marker followed the request transition',
       );
@@ -109,7 +124,9 @@ void main() {
       );
     });
 
-    testWidgets('the permanently denied path routes to settings', (tester) async {
+    testWidgets('the permanently denied path routes to settings', (
+      tester,
+    ) async {
       useLargeSurface(tester);
       await pumpMatrix(tester);
       await tap(tester, cell('camera', PermissionStatus.permanentlyDenied));
@@ -135,7 +152,9 @@ void main() {
   });
 
   group('outcome matrix structure (FR-001/FR-002)', () {
-    testWidgets('renders a matrix row for every built-in scope', (tester) async {
+    testWidgets('renders a matrix row for every built-in scope', (
+      tester,
+    ) async {
       useLargeSurface(tester);
       await pumpMatrix(tester);
       const issueScopes = {
@@ -158,9 +177,10 @@ void main() {
         );
       }
       expect(
-        BuiltInPermissionScopes.all.map((scope) => scope.id).toSet().containsAll(
-              issueScopes,
-            ),
+        BuiltInPermissionScopes.all
+            .map((scope) => scope.id)
+            .toSet()
+            .containsAll(issueScopes),
         isTrue,
         reason: 'the ten scopes named in issue #7 are all built-ins',
       );
@@ -174,7 +194,11 @@ void main() {
       final xs = <double>[];
       for (final status in PermissionStatus.values) {
         final header = find.byKey(ValueKey('matrix-col-${status.name}'));
-        expect(header, findsOneWidget, reason: 'the ${status.name} column renders');
+        expect(
+          header,
+          findsOneWidget,
+          reason: 'the ${status.name} column renders',
+        );
         xs.add(tester.getTopLeft(header).dx);
       }
       for (var i = 1; i < xs.length; i++) {
@@ -236,32 +260,32 @@ void main() {
       );
     });
 
-    testWidgets(
-      'request on an already-decided status returns it unchanged',
-      (tester) async {
-        useLargeSurface(tester);
-        await pumpMatrix(tester);
-        const decided = [
-          PermissionStatus.granted,
-          PermissionStatus.denied,
-          PermissionStatus.restricted,
-          PermissionStatus.limited,
-        ];
-        for (final status in decided) {
-          await tap(tester, cell('microphone', status));
-          await tap(tester, find.byKey(const ValueKey('request-microphone')));
-          expect(
-            find.descendant(
-              of: statusChip('microphone'),
-              matching: find.text(status.name),
-            ),
-            findsOneWidget,
-            reason: 'request returns the decided ${status.name} unchanged '
-                '(idempotent)',
-          );
-        }
-      },
-    );
+    testWidgets('request on an already-decided status returns it unchanged', (
+      tester,
+    ) async {
+      useLargeSurface(tester);
+      await pumpMatrix(tester);
+      const decided = [
+        PermissionStatus.granted,
+        PermissionStatus.denied,
+        PermissionStatus.restricted,
+        PermissionStatus.limited,
+      ];
+      for (final status in decided) {
+        await tap(tester, cell('microphone', status));
+        await tap(tester, find.byKey(const ValueKey('request-microphone')));
+        expect(
+          find.descendant(
+            of: statusChip('microphone'),
+            matching: find.text(status.name),
+          ),
+          findsOneWidget,
+          reason:
+              'request returns the decided ${status.name} unchanged '
+              '(idempotent)',
+        );
+      }
+    });
   });
 
   group('permanently denied → settings (FR-005)', () {
@@ -297,27 +321,26 @@ void main() {
       },
     );
 
-    testWidgets(
-      'Open Settings appears only for permanently denied scopes',
-      (tester) async {
-        useLargeSurface(tester);
-        await pumpMatrix(tester);
-        await tap(tester, cell('biometrics', PermissionStatus.denied));
-        await tester.pump();
-        expect(
-          find.byKey(const ValueKey('settings-biometrics')),
-          findsNothing,
-          reason: 'a merely denied scope does not offer settings',
-        );
-        await tap(tester, cell('biometrics', PermissionStatus.permanentlyDenied));
-        await tester.pump();
-        expect(
-          find.byKey(const ValueKey('settings-biometrics')),
-          findsOneWidget,
-          reason: 'a permanently denied scope does',
-        );
-      },
-    );
+    testWidgets('Open Settings appears only for permanently denied scopes', (
+      tester,
+    ) async {
+      useLargeSurface(tester);
+      await pumpMatrix(tester);
+      await tap(tester, cell('biometrics', PermissionStatus.denied));
+      await tester.pump();
+      expect(
+        find.byKey(const ValueKey('settings-biometrics')),
+        findsNothing,
+        reason: 'a merely denied scope does not offer settings',
+      );
+      await tap(tester, cell('biometrics', PermissionStatus.permanentlyDenied));
+      await tester.pump();
+      expect(
+        find.byKey(const ValueKey('settings-biometrics')),
+        findsOneWidget,
+        reason: 'a permanently denied scope does',
+      );
+    });
 
     testWidgets('tapping Open Settings reports the launch result', (
       tester,
@@ -345,20 +368,19 @@ void main() {
   });
 
   group('flow log (FR-006)', () {
-    testWidgets(
-      'the flow log records the boot-time check of every scope',
-      (tester) async {
-        useLargeSurface(tester);
-        await pumpMatrix(tester);
-        for (final scope in BuiltInPermissionScopes.all) {
-          expect(
-            find.text('check ${scope.id} → undetermined'),
-            findsOneWidget,
-            reason: 'the boot-time check of ${scope.id} is recorded',
-          );
-        }
-      },
-    );
+    testWidgets('the flow log records the boot-time check of every scope', (
+      tester,
+    ) async {
+      useLargeSurface(tester);
+      await pumpMatrix(tester);
+      for (final scope in BuiltInPermissionScopes.all) {
+        expect(
+          find.text('check ${scope.id} → undetermined'),
+          findsOneWidget,
+          reason: 'the boot-time check of ${scope.id} is recorded',
+        );
+      }
+    });
 
     testWidgets('the flow log records set and request transitions', (
       tester,
@@ -403,35 +425,32 @@ void main() {
   });
 
   group('live tab (FR-007)', () {
-    testWidgets(
-      "the live tab renders the live service's scopes with check and "
-      'request actions',
-      (tester) async {
-        useLargeSurface(tester);
-        final live = inMemoryService();
-        await tester.pumpWidget(PermissionApp(liveService: live));
-        await tester.pumpAndSettle();
-        await tap(tester, find.text('Live'));
-        await tester.pumpAndSettle();
-        for (final scope in BuiltInPermissionScopes.all) {
-          expect(
-            find.byKey(ValueKey('live-scope-${scope.id}')),
-            findsOneWidget,
-            reason: 'the live tab lists ${scope.id}',
-          );
-        }
-        await tap(tester, find.byKey(const ValueKey('live-request-camera')));
-        await tester.pump();
+    testWidgets("the live tab renders the live service's scopes with check and "
+        'request actions', (tester) async {
+      useLargeSurface(tester);
+      final live = inMemoryService();
+      await tester.pumpWidget(PermissionApp(liveService: live));
+      await tester.pumpAndSettle();
+      await tap(tester, find.text('Live'));
+      await tester.pumpAndSettle();
+      for (final scope in BuiltInPermissionScopes.all) {
         expect(
-          find.descendant(
-            of: find.byKey(const ValueKey('live-status-camera')),
-            matching: find.text(PermissionStatus.granted.name),
-          ),
+          find.byKey(ValueKey('live-scope-${scope.id}')),
           findsOneWidget,
-          reason: 'a live request resolves through the port',
+          reason: 'the live tab lists ${scope.id}',
         );
-      },
-    );
+      }
+      await tap(tester, find.byKey(const ValueKey('live-request-camera')));
+      await tester.pump();
+      expect(
+        find.descendant(
+          of: find.byKey(const ValueKey('live-status-camera')),
+          matching: find.text(PermissionStatus.granted.name),
+        ),
+        findsOneWidget,
+        reason: 'a live request resolves through the port',
+      );
+    });
   });
 
   group('scope × status cells (FR-003)', () {
@@ -467,19 +486,28 @@ void main() {
       final dot = find.byKey(const ValueKey('matrix-active-dot-camera'));
       expect(dot, findsOneWidget, reason: 'the active-cell marker renders');
       expect(
-        find.ancestor(of: dot, matching: cell('camera', PermissionStatus.undetermined)),
+        find.ancestor(
+          of: dot,
+          matching: cell('camera', PermissionStatus.undetermined),
+        ),
         findsOneWidget,
         reason: 'camera starts undetermined',
       );
       await tap(tester, cell('camera', PermissionStatus.granted));
       expect(
-        find.ancestor(of: dot, matching: cell('camera', PermissionStatus.granted)),
+        find.ancestor(
+          of: dot,
+          matching: cell('camera', PermissionStatus.granted),
+        ),
         findsOneWidget,
         reason: 'the marker moves to the granted cell',
       );
       await tap(tester, cell('camera', PermissionStatus.limited));
       expect(
-        find.ancestor(of: dot, matching: cell('camera', PermissionStatus.limited)),
+        find.ancestor(
+          of: dot,
+          matching: cell('camera', PermissionStatus.limited),
+        ),
         findsOneWidget,
         reason: 'the marker moves to the limited cell',
       );
