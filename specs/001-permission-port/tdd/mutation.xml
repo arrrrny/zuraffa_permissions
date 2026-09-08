@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mechanical mutation sweep for spec 001-permission-port.
+     Scope: the 7 behavior-bearing source files pinned by tdd/verification.md.
+     Kill oracle: the package unit suite (flutter test, 22 behaviors). -->
+<mutations version="1.2">
+  <files>
+    <file>lib/src/data/permission/in_memory_permission_adapter.dart</file>
+    <file>lib/src/permission_service.dart</file>
+    <file>lib/src/domain/entities/scopes/built_in_permission_scopes.dart</file>
+    <file>lib/src/domain/repositories/permission_scope_repository.dart</file>
+    <file>lib/src/data/repositories/data_permission_scope_repository.dart</file>
+    <file>lib/src/domain/permission/permission_port.dart</file>
+    <file>lib/src/domain/entities/enums/permission_status.dart</file>
+  </files>
+  <commands>
+    <command group="test" expected-return="0" working-directory="." timeout="120">flutter test</command>
+  </commands>
+</mutations>
