@@ -1,7 +1,15 @@
 name: zuraffa_permissions_ios
-description: The iOS implementation of zuraffa_permissions (AVFoundation/Photos/CoreLocation/UNUserNotificationCenter).
+description: >-
+  The iOS implementation of zuraffa_permissions (AVFoundation, Photos,
+  CoreLocation, UNUserNotificationCenter) across the eleven built-in scopes.
 version: 0.1.0
-publish_to: none
+homepage: https://zuraffa.com
+repository: https://github.com/arrrrny/zuraffa_permissions
+issue_tracker: https://github.com/arrrrny/zuraffa_permissions/issues
+topics:
+  - permissions
+  - zuraffa
+  - ios
 
 environment:
   sdk: ^3.11.0
@@ -18,10 +26,8 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  zuraffa_permissions:
-    path: ../
-  zuraffa_permissions_platform_interface:
-    path: ../zuraffa_permissions_platform_interface
+  zuraffa_permissions: ^0.1.0
+  zuraffa_permissions_platform_interface: ^0.1.0
 
 dev_dependencies:
   flutter_test:
