@@ -64,6 +64,8 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  # The spec-007 TDD mutation gate runs from the example directory.
+  mutation_test: ^1.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -1,6 +1,9 @@
 name: zuraffa_permissions_macos
-description: The macOS implementation of zuraffa_permissions (AVFoundation/Photos/CoreLocation/UNUserNotificationCenter).
+description: >-
+  The macOS implementation of zuraffa_permissions (AVFoundation, Photos,
+  CoreLocation, UNUserNotificationCenter) across the eleven built-in scopes.
 version: 1.0.0
+homepage: https://zuraffa.com
 
 environment:
   sdk: ^3.11.0

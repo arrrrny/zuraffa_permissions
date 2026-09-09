@@ -1,6 +1,10 @@
 name: zuraffa_permissions_platform_interface
-description: The platform interface contract for zuraffa_permissions — MethodChannel protocol + PermissionPort bridge.
+description: >-
+  The platform interface contract for zuraffa_permissions: the
+  MethodChannel protocol and the PermissionPort bridge platform
+  implementations conform to.
 version: 1.0.0
+homepage: https://zuraffa.com
 
 environment:
   sdk: ^3.11.0

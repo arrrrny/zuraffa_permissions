@@ -84,6 +84,12 @@ finding remains open.
 
 ## Mutation results
 
+> **Re-run 2026-09-08 (pre-publish):** the mechanical sweep below was re-executed
+> verbatim via `specs/001-permission-port/tdd/mutation.xml`
+> (`dart run mutation_test specs/001-permission-port/tdd/mutation.xml`) on the
+> platform-trimmed tree: **25 mutants, 0 undetected, 0 timeouts, quality A** in
+> 10:07 — result identical to the recorded run. Zero misfires.
+
 ### Mechanical run (mutation_test 1.8.0) — re-verified after remedies
 
 Scoped to the **7** behavior-bearing source files. Result: **25 mutants, 0
