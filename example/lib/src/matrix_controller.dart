@@ -21,11 +21,14 @@ class FlowEvent {
   final bool? launched;
 
   /// The one-line record the flow log renders, e.g.
-  /// `request camera: undetermined → denied`.
+  /// `request camera: undetermined → denied`. Total over every construction:
+  /// a missing operand renders as `?` instead of crashing the log.
   String get label => switch (kind) {
-    FlowEventKind.check => 'check $scope → ${to!.name}',
-    FlowEventKind.forced => 'set $scope: ${from!.name} → ${to!.name}',
-    FlowEventKind.requested => 'request $scope: ${from!.name} → ${to!.name}',
+    FlowEventKind.check => 'check $scope → ${to?.name ?? '?'}',
+    FlowEventKind.forced =>
+      'set $scope: ${from?.name ?? '?'} → ${to?.name ?? '?'}',
+    FlowEventKind.requested =>
+      'request $scope: ${from?.name ?? '?'} → ${to?.name ?? '?'}',
     FlowEventKind.settingsOpened =>
       (launched ?? false)
           ? 'openSettings: launched'
@@ -48,6 +51,10 @@ class MatrixController extends ChangeNotifier {
 
   /// The public permission API the whole panel drives.
   final PermissionService service;
+
+  /// Set in [dispose]; the check/request sweeps launched from `initState` can
+  /// complete after the screen is gone, and notifying then would throw.
+  bool _disposed = false;
 
   /// Current status per scope id (the matrix's visual state).
   final Map<String, PermissionStatus> _statuses = {};
@@ -83,6 +90,7 @@ class MatrixController extends ChangeNotifier {
   /// Re-checks a single scope's current status without prompting.
   Future<void> check(String scopeId) async {
     final status = await service.check(scopeId);
+    if (_disposed) return;
     events.add(
       FlowEvent(kind: FlowEventKind.check, scope: scopeId, to: status),
     );
@@ -95,7 +103,7 @@ class MatrixController extends ChangeNotifier {
   /// demand; a no-op against a real platform port.
   void forceStatus(String scopeId, PermissionStatus status) {
     final adapter = _simAdapter;
-    if (adapter == null) return;
+    if (adapter == null || _disposed) return;
     final from = statusOf(scopeId);
     adapter.setStatus(scopeId, status);
     _statuses[scopeId] = status;
@@ -118,6 +126,7 @@ class MatrixController extends ChangeNotifier {
   Future<PermissionRequestResult> request(String scopeId) async {
     final from = statusOf(scopeId);
     final result = await service.request(scopeId);
+    if (_disposed) return result;
     events.add(
       FlowEvent(
         kind: FlowEventKind.requested,
@@ -135,10 +144,17 @@ class MatrixController extends ChangeNotifier {
   /// be launched.
   Future<bool> openSettings() async {
     final launched = await service.openSettings();
+    if (_disposed) return launched;
     events.add(
       FlowEvent(kind: FlowEventKind.settingsOpened, launched: launched),
     );
     notifyListeners();
     return launched;
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    super.dispose();
   }
 }

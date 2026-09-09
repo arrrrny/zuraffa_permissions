@@ -10,6 +10,11 @@ class FlowLogView extends StatelessWidget {
 
   final MatrixController controller;
 
+  /// The log renders only the newest [_maxEntries] events so a long
+  /// simulator session cannot grow the widget tree without bound; the
+  /// controller still records every event.
+  static const int _maxEntries = 50;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -22,9 +27,12 @@ class FlowLogView extends StatelessWidget {
             child: Text('No events yet — tap a cell or a request button.'),
           );
         }
+        final start = controller.events.length > _maxEntries
+            ? controller.events.length - _maxEntries
+            : 0;
         return Column(
           children: [
-            for (var i = 0; i < controller.events.length; i++)
+            for (var i = start; i < controller.events.length; i++)
               Padding(
                 key: ValueKey('flow-entry-$i'),
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),

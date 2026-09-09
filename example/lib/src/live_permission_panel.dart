@@ -55,7 +55,7 @@ class _LivePermissionPanelState extends State<LivePermissionPanel> {
     setState(() => _statuses[scopeId] = result.status);
   }
 
-  Future<void> _openSettings(String scopeId) async {
+  Future<void> _openSettings() async {
     final launched = await _service.openSettings();
     if (!mounted) return;
     ScaffoldMessenger.of(context)
@@ -152,7 +152,7 @@ class _LivePermissionPanelState extends State<LivePermissionPanel> {
                               PermissionStatus.permanentlyDenied,
                             ),
                           ),
-                          onPressed: () => _openSettings(scope.id),
+                          onPressed: () => _openSettings(),
                           icon: const Icon(Icons.settings, size: 16),
                           label: const Text('Open Settings'),
                         ),
