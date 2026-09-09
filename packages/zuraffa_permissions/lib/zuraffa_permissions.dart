@@ -3,7 +3,7 @@
 ///
 /// The permission layer every capability package builds on:
 /// a [PermissionPort] (check/request/openSettings) over typed
-/// [PermissionScope] entities, ten built-in scopes, a
+/// [PermissionScope] entities, eleven built-in scopes, a
 /// [PermissionScopeRegistry] for customs, and an in-memory default
 /// adapter so permission logic is testable in pure Dart. Platform
 /// adapters (zuraffa_permissions_android/ios/…) implement the port as

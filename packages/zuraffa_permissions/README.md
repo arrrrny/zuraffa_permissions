@@ -7,7 +7,7 @@ Typed permission requests for the Zuraffa ecosystem — the foundation layer eve
 ```dart
 final permissions = PermissionService();
 
-final status = await permissions.request(PermissionScopeNames.camera);
+final status = await permissions.request('camera');
 if (status == PermissionStatus.permanentlyDenied) {
   await permissions.openSettings();
 }
@@ -16,7 +16,7 @@ if (status == PermissionStatus.permanentlyDenied) {
 ## Design
 
 - **PermissionPort** — the technology-agnostic contract (`check`/`request`/`openSettings`); platform adapters (zuraffa_permissions_android/ios/…) implement it as federated siblings.
-- **10 built-in scopes** — camera, photos, notifications, locationWhenInUse/Always, microphone, storage, biometrics, contacts, calendar — zero-config; custom scopes register through `PermissionScopeRegistry`.
+- **11 built-in scopes** — camera, photos, notifications, locationWhenInUse/Always, microphone, storage, biometrics, contacts, calendar, tracking — zero-config; custom scopes register through `PermissionScopeRegistry`.
 - **PermissionStatus** — granted / denied / permanentlyDenied / undetermined / restricted / limited. Requesting a permanently-denied scope never re-prompts; the caller routes to settings.
 - **InMemoryPermissionAdapter** — pure-Dart default so permission logic tests without a platform.
 - Entities generated via the zfa CLI (Zorphy); `registerPermissionDependencies` wires port + registry + service onto GetIt.

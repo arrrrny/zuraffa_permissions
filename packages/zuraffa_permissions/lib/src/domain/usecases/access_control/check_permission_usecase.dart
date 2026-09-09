@@ -50,6 +50,9 @@ class CheckPermissionUseCase extends UseCase<bool, CheckPermissionParams> {
     final assignments = await _userRoles.getList(
       ListQueryParams<UserRole>(params: {'userId': params.userId}),
     );
+    // One membership query per assignment: O(roles) round-trips. The
+    // default store is in-memory, where that is free; a backed datasource
+    // batch of role ids would age better if this ever becomes hot.
     for (final assignment in assignments) {
       final memberships = await _rolePermissions.getList(
         ListQueryParams<RolePermission>(

@@ -1,17 +1,14 @@
 # example
 
-A new Flutter project.
+The `zuraffa_permissions` outcome-matrix demonstrator: a Flutter host app
+that exercises every built-in permission scope through the package's public
+`PermissionService` API.
 
-## Getting Started
+- **Matrix tab** — an 11 × 6 scope × status simulator grid backed by the
+  package's pure-Dart `InMemoryPermissionAdapter`; tap any cell to place a
+  scope in that status, then request it and watch the flow log record the
+  transition (check → request → openSettings when permanently denied).
+- **Live tab** — the same API against the GetIt-registered stack, i.e. the
+  real method-channel platform adapters on Android, iOS, and macOS.
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Run it with `flutter run` from this directory.

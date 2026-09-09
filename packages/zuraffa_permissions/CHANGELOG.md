@@ -7,7 +7,7 @@
   EPIC #214).
 - **Permission & role domain objects** (FR-001): `Permission`, `Role`,
   `UserPermission`, `UserRole` and `RolePermission` are Zuraffa (Zorphy)
-  entities with unique identifiers and JSON round-trip support.
+  entities with unique or composite identifiers and JSON round-trip support.
 - **Persistence through Zuraffa layers** (FR-002): datasource contracts +
   `Data*Repository` implementations for the five new aggregates, with a
   pure-Dart `InMemoryPermissionStore` default so access control tests
@@ -18,6 +18,7 @@
   `RevokePermissionFromUserUseCase`, `GrantPermissionToRoleUseCase`,
   `CreatePermissionUseCase`, `CreateRoleUseCase` — all resolved from GetIt
   via `registerPermissionDependencies` (FR-004).
-- **Published to pub.dev** under the `zuzu.dev` publisher (FR-005).
+- **Publish-ready** (FR-005): version 1.0.0, MIT LICENSE, repository/topics
+  metadata for publication under the `zuzu.dev` publisher.
 - Existing consumers keep the unchanged `PermissionPort` / `PermissionService`
   / scope registry API — no breaking changes (FR-006).
