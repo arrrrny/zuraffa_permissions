@@ -47,7 +47,8 @@ void main() {
         expect(
           result.status,
           isNot(PermissionStatus.undetermined),
-          reason: 'request must engage the system prompt and resolve to a real '
+          reason:
+              'request must engage the system prompt and resolve to a real '
               'status, not stay undetermined',
         );
       },

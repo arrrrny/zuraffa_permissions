@@ -23,3 +23,6 @@ mutation-test-report/
 
 # Agent working directory
 .kimi-code/
+
+# spec-kit extension catalog cache (generated, refetches itself)
+.specify/extensions/.cache/

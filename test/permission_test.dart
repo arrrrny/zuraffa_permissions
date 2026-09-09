@@ -40,10 +40,16 @@ void main() {
       ]) {
         expect(registry.contains(id), isTrue, reason: '$id must ship built-in');
       }
-      expect(BuiltInPermissionScopes.all, hasLength(11),
-          reason: 'eleven built-ins ship zero-config');
-      expect(registry.lookup(kCamera)!.platformGroup, 'media',
-          reason: 'camera maps to the media platform group');
+      expect(
+        BuiltInPermissionScopes.all,
+        hasLength(11),
+        reason: 'eleven built-ins ship zero-config',
+      );
+      expect(
+        registry.lookup(kCamera)!.platformGroup,
+        'media',
+        reason: 'camera maps to the media platform group',
+      );
       expect(
         registry.lookup(kNotifications)!.description,
         contains('notification'),
@@ -51,16 +57,28 @@ void main() {
       );
     });
 
-    test('tracking is the 11th built-in scope, registered zero-config (FR-003)', () {
-      final registry = PermissionScopeRegistry.withBuiltIns();
-      expect(registry.contains(kTracking), isTrue,
-          reason: 'tracking must ship built-in');
-      expect(BuiltInPermissionScopes.tracking.id, kTracking);
-      expect(BuiltInPermissionScopes.tracking.platformGroup, 'privacy',
-          reason: 'tracking maps to the privacy platform group');
-      expect(BuiltInPermissionScopes.all, hasLength(11),
-          reason: 'eleven built-ins including tracking');
-    });
+    test(
+      'tracking is the 11th built-in scope, registered zero-config (FR-003)',
+      () {
+        final registry = PermissionScopeRegistry.withBuiltIns();
+        expect(
+          registry.contains(kTracking),
+          isTrue,
+          reason: 'tracking must ship built-in',
+        );
+        expect(BuiltInPermissionScopes.tracking.id, kTracking);
+        expect(
+          BuiltInPermissionScopes.tracking.platformGroup,
+          'privacy',
+          reason: 'tracking maps to the privacy platform group',
+        );
+        expect(
+          BuiltInPermissionScopes.all,
+          hasLength(11),
+          reason: 'eleven built-ins including tracking',
+        );
+      },
+    );
 
     test('custom scopes register through the same seam (FR-004)', () {
       final registry = PermissionScopeRegistry.withBuiltIns()
@@ -74,8 +92,11 @@ void main() {
         );
 
       expect(registry.contains('bluetoothScan'), isTrue);
-      expect(registry.all, hasLength(12),
-          reason: 'eleven built-ins plus one custom');
+      expect(
+        registry.all,
+        hasLength(12),
+        reason: 'eleven built-ins plus one custom',
+      );
 
       // Duplicate registration is a typed error.
       expect(
@@ -155,35 +176,57 @@ void main() {
       expect((await port.request(kCamera)).status, PermissionStatus.limited);
     });
 
-    test('a scope currently restricted is returned unchanged and not re-prompted '
-        '(FR-005)', () async {
-      final port = InMemoryPermissionAdapter()
-        ..setStatus(kCamera, PermissionStatus.restricted);
-      port.setPromptOutcome(kCamera, PermissionStatus.granted);
+    test(
+      'a scope currently restricted is returned unchanged and not re-prompted '
+      '(FR-005)',
+      () async {
+        final port = InMemoryPermissionAdapter()
+          ..setStatus(kCamera, PermissionStatus.restricted);
+        port.setPromptOutcome(kCamera, PermissionStatus.granted);
 
-      expect((await port.request(kCamera)).status, PermissionStatus.restricted);
-    });
+        expect(
+          (await port.request(kCamera)).status,
+          PermissionStatus.restricted,
+        );
+      },
+    );
 
-    test('check() returns an explicitly set limited or restricted status (FR-002)', () async {
-      final port = InMemoryPermissionAdapter();
-      port.setStatus(kCamera, PermissionStatus.limited);
-      expect(await port.check(kCamera), PermissionStatus.limited);
+    test(
+      'check() returns an explicitly set limited or restricted status (FR-002)',
+      () async {
+        final port = InMemoryPermissionAdapter();
+        port.setStatus(kCamera, PermissionStatus.limited);
+        expect(await port.check(kCamera), PermissionStatus.limited);
 
-      port.setStatus(kPhotos, PermissionStatus.restricted);
-      expect(await port.check(kPhotos), PermissionStatus.restricted);
-    });
+        port.setStatus(kPhotos, PermissionStatus.restricted);
+        expect(await port.check(kPhotos), PermissionStatus.restricted);
+      },
+    );
 
-    test('request returns a PermissionRequestResult carrying scope, status, and '
-        'requestedAt (FR-001)', () async {
-      final port = InMemoryPermissionAdapter()
-        ..setPromptOutcome(kCamera, PermissionStatus.granted);
-      final result = await port.request(kCamera);
-      expect(result.scope, kCamera, reason: 'result carries the requested scope');
-      expect(result.status, PermissionStatus.granted,
-          reason: 'result carries the resolved status');
-      expect(result.requestedAt, greaterThan(0),
-          reason: 'result carries a positive timestamp');
-    });
+    test(
+      'request returns a PermissionRequestResult carrying scope, status, and '
+      'requestedAt (FR-001)',
+      () async {
+        final port = InMemoryPermissionAdapter()
+          ..setPromptOutcome(kCamera, PermissionStatus.granted);
+        final result = await port.request(kCamera);
+        expect(
+          result.scope,
+          kCamera,
+          reason: 'result carries the requested scope',
+        );
+        expect(
+          result.status,
+          PermissionStatus.granted,
+          reason: 'result carries the resolved status',
+        );
+        expect(
+          result.requestedAt,
+          greaterThan(0),
+          reason: 'result carries a positive timestamp',
+        );
+      },
+    );
 
     test('openSettings reports launchability', () async {
       final port = InMemoryPermissionAdapter();
@@ -293,19 +336,29 @@ void main() {
       () => setPlatformPermissionPortFactory(() => InMemoryPermissionAdapter()),
     );
 
-    test('registerPermissionDependencies uses the factory-supplied port', () async {
-      final getIt = getItForTest();
-      registerPermissionDependencies(getIt);
+    test(
+      'registerPermissionDependencies uses the factory-supplied port',
+      () async {
+        final getIt = getItForTest();
+        registerPermissionDependencies(getIt);
 
-      // Pin the wiring directly: the resolved port must be the factory instance,
-      // not the in-memory default.
-      expect(identical(getIt<PermissionPort>(), fake), isTrue,
-          reason: 'DI must resolve the factory-supplied port, not the default');
-      final service = getIt<PermissionService>();
-      expect(await service.check(kCamera), PermissionStatus.granted,
-          reason: 'factory port reports granted (default would be undetermined)');
-      expect(await service.request(kCamera), isA<PermissionRequestResult>());
-    });
+        // Pin the wiring directly: the resolved port must be the factory instance,
+        // not the in-memory default.
+        expect(
+          identical(getIt<PermissionPort>(), fake),
+          isTrue,
+          reason: 'DI must resolve the factory-supplied port, not the default',
+        );
+        final service = getIt<PermissionService>();
+        expect(
+          await service.check(kCamera),
+          PermissionStatus.granted,
+          reason:
+              'factory port reports granted (default would be undetermined)',
+        );
+        expect(await service.request(kCamera), isA<PermissionRequestResult>());
+      },
+    );
 
     test('an injected port still wins over the factory', () async {
       final injected = InMemoryPermissionAdapter()..grant(kCamera);
@@ -320,17 +373,14 @@ void main() {
   group('permission status enum (FR-002)', () {
     test('enumerates exactly the six required states', () {
       expect(PermissionStatus.values, hasLength(6));
-      expect(
-        PermissionStatus.values.map((s) => s.name).toSet(),
-        {
-          'granted',
-          'denied',
-          'permanentlyDenied',
-          'undetermined',
-          'restricted',
-          'limited',
-        },
-      );
+      expect(PermissionStatus.values.map((s) => s.name).toSet(), {
+        'granted',
+        'denied',
+        'permanentlyDenied',
+        'undetermined',
+        'restricted',
+        'limited',
+      });
     });
   });
 }

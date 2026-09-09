@@ -55,292 +55,369 @@ void main() {
     // never leak into their siblings.
     ZuraffaPermissionsPlatform.instance = DefaultZuraffaPermissionsPlatform();
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, null);
+        .setMockMethodCallHandler(
+          MethodChannelZuraffaPermissions.channel,
+          null,
+        );
   });
 
   group('wire vocabulary (FR-001)', () {
-    test('U1: PermissionWireStatus exposes exactly the six stable wire strings', () {
-      final wires = <String>{
-        PermissionWireStatus.granted,
-        PermissionWireStatus.denied,
-        PermissionWireStatus.permanentlyDenied,
-        PermissionWireStatus.undetermined,
-        PermissionWireStatus.restricted,
-        PermissionWireStatus.limited,
-      };
-      expect(wires, hasLength(6), reason: 'the vocabulary is exactly six strings');
-      expect(
-        wires,
-        equals(<String>{
-          'granted',
-          'denied',
-          'permanentlyDenied',
-          'undetermined',
-          'restricted',
-          'limited',
-        }),
-        reason: 'every wire string matches the documented channel vocabulary',
-      );
-    });
+    test(
+      'U1: PermissionWireStatus exposes exactly the six stable wire strings',
+      () {
+        final wires = <String>{
+          PermissionWireStatus.granted,
+          PermissionWireStatus.denied,
+          PermissionWireStatus.permanentlyDenied,
+          PermissionWireStatus.undetermined,
+          PermissionWireStatus.restricted,
+          PermissionWireStatus.limited,
+        };
+        expect(
+          wires,
+          hasLength(6),
+          reason: 'the vocabulary is exactly six strings',
+        );
+        expect(
+          wires,
+          equals(<String>{
+            'granted',
+            'denied',
+            'permanentlyDenied',
+            'undetermined',
+            'restricted',
+            'limited',
+          }),
+          reason: 'every wire string matches the documented channel vocabulary',
+        );
+      },
+    );
   });
 
   group('platform instance registry (FR-002)', () {
-    test('U2: instance defaults to the safe fallback before any registration', () async {
-      // No assignment here: this test reads the shipped default directly
-      // (in the isolated single-test run the static is pristine, so a
-      // default that stops initializing is observed as a read failure).
-      expect(
-        ZuraffaPermissionsPlatform.instance,
-        isA<DefaultZuraffaPermissionsPlatform>(),
-        reason: 'no platform package registered — the safe fallback is live',
-      );
-      expect(
-        await ZuraffaPermissionsPlatform.instance.checkPermissions([kCameraScope]),
-        {kCameraScope: 'undetermined'},
-        reason: 'the default answers with the fallback semantics',
-      );
-    });
+    test(
+      'U2: instance defaults to the safe fallback before any registration',
+      () async {
+        // No assignment here: this test reads the shipped default directly
+        // (in the isolated single-test run the static is pristine, so a
+        // default that stops initializing is observed as a read failure).
+        expect(
+          ZuraffaPermissionsPlatform.instance,
+          isA<DefaultZuraffaPermissionsPlatform>(),
+          reason: 'no platform package registered — the safe fallback is live',
+        );
+        expect(
+          await ZuraffaPermissionsPlatform.instance.checkPermissions([
+            kCameraScope,
+          ]),
+          {kCameraScope: 'undetermined'},
+          reason: 'the default answers with the fallback semantics',
+        );
+      },
+    );
 
-    test('U3: assigning instance registers a custom implementation that reads observe', () {
-      final scripted = _ScriptedPermissionsPlatform(
-        checkReply: {kCameraScope: 'granted'},
-      );
-      ZuraffaPermissionsPlatform.instance = scripted;
-      expect(
-        identical(ZuraffaPermissionsPlatform.instance, scripted),
-        isTrue,
-        reason: 'the registered implementation is the one reads observe',
-      );
-    });
+    test(
+      'U3: assigning instance registers a custom implementation that reads observe',
+      () {
+        final scripted = _ScriptedPermissionsPlatform(
+          checkReply: {kCameraScope: 'granted'},
+        );
+        ZuraffaPermissionsPlatform.instance = scripted;
+        expect(
+          identical(ZuraffaPermissionsPlatform.instance, scripted),
+          isTrue,
+          reason: 'the registered implementation is the one reads observe',
+        );
+      },
+    );
   });
 
   group('default fallback semantics (FR-003)', () {
-    test('U4: checkPermissions reports every requested scope as undetermined', () async {
-      final fallback = DefaultZuraffaPermissionsPlatform();
-      final statuses = await fallback.checkPermissions([
-        kCameraScope,
-        kPhotosScope,
-        kMicrophoneScope,
-      ]);
-      expect(
-        statuses,
-        {
-          kCameraScope: 'undetermined',
-          kPhotosScope: 'undetermined',
-          kMicrophoneScope: 'undetermined',
-        },
-        reason: 'the fallback cannot know real statuses — everything is undetermined',
-      );
-    });
+    test(
+      'U4: checkPermissions reports every requested scope as undetermined',
+      () async {
+        final fallback = DefaultZuraffaPermissionsPlatform();
+        final statuses = await fallback.checkPermissions([
+          kCameraScope,
+          kPhotosScope,
+          kMicrophoneScope,
+        ]);
+        expect(
+          statuses,
+          {
+            kCameraScope: 'undetermined',
+            kPhotosScope: 'undetermined',
+            kMicrophoneScope: 'undetermined',
+          },
+          reason:
+              'the fallback cannot know real statuses — everything is undetermined',
+        );
+      },
+    );
 
-    test('U5: requestPermissions reports every requested scope as undetermined', () async {
-      final fallback = DefaultZuraffaPermissionsPlatform();
-      final statuses = await fallback.requestPermissions([kCameraScope]);
-      expect(
-        statuses,
-        {kCameraScope: 'undetermined'},
-        reason: 'the fallback never prompts — requests resolve undetermined',
-      );
-    });
+    test(
+      'U5: requestPermissions reports every requested scope as undetermined',
+      () async {
+        final fallback = DefaultZuraffaPermissionsPlatform();
+        final statuses = await fallback.requestPermissions([kCameraScope]);
+        expect(
+          statuses,
+          {kCameraScope: 'undetermined'},
+          reason: 'the fallback never prompts — requests resolve undetermined',
+        );
+      },
+    );
 
-    test('U6: openSettings returns false — the fallback cannot launch settings', () async {
-      final fallback = DefaultZuraffaPermissionsPlatform();
-      expect(
-        await fallback.openSettings(),
-        isFalse,
-        reason: 'no platform package loaded — settings cannot be launched',
-      );
-    });
+    test(
+      'U6: openSettings returns false — the fallback cannot launch settings',
+      () async {
+        final fallback = DefaultZuraffaPermissionsPlatform();
+        expect(
+          await fallback.openSettings(),
+          isFalse,
+          reason: 'no platform package loaded — settings cannot be launched',
+        );
+      },
+    );
   });
 
   group('method-channel client (FR-004)', () {
-    test('U7: checkPermissions invokes the shared channel with the scope list and returns the statuses', () async {
-      final invocations = <MethodCall>[];
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
-        call,
-      ) async {
-        invocations.add(call);
-        return {kCameraScope: 'granted'};
-      });
-      final client = MethodChannelZuraffaPermissions();
+    test(
+      'U7: checkPermissions invokes the shared channel with the scope list and returns the statuses',
+      () async {
+        final invocations = <MethodCall>[];
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
+              call,
+            ) async {
+              invocations.add(call);
+              return {kCameraScope: 'granted'};
+            });
+        final client = MethodChannelZuraffaPermissions();
 
-      final statuses = await client.checkPermissions([kCameraScope, kPhotosScope]);
+        final statuses = await client.checkPermissions([
+          kCameraScope,
+          kPhotosScope,
+        ]);
 
-      expect(invocations, hasLength(1), reason: 'exactly one channel call');
-      expect(invocations.single.method, 'checkPermissions');
-      expect(invocations.single.arguments, [kCameraScope, kPhotosScope]);
-      expect(statuses, {kCameraScope: 'granted'});
-    });
+        expect(invocations, hasLength(1), reason: 'exactly one channel call');
+        expect(invocations.single.method, 'checkPermissions');
+        expect(invocations.single.arguments, [kCameraScope, kPhotosScope]);
+        expect(statuses, {kCameraScope: 'granted'});
+      },
+    );
 
-    test('U8: requestPermissions invokes method requestPermissions and returns the statuses', () async {
-      final invocations = <MethodCall>[];
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
-        call,
-      ) async {
-        invocations.add(call);
-        return {kCameraScope: 'denied'};
-      });
-      final client = MethodChannelZuraffaPermissions();
+    test(
+      'U8: requestPermissions invokes method requestPermissions and returns the statuses',
+      () async {
+        final invocations = <MethodCall>[];
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
+              call,
+            ) async {
+              invocations.add(call);
+              return {kCameraScope: 'denied'};
+            });
+        final client = MethodChannelZuraffaPermissions();
 
-      final statuses = await client.requestPermissions([kCameraScope]);
+        final statuses = await client.requestPermissions([kCameraScope]);
 
-      expect(invocations, hasLength(1), reason: 'exactly one channel call');
-      expect(invocations.single.method, 'requestPermissions');
-      expect(invocations.single.arguments, [kCameraScope]);
-      expect(statuses, {kCameraScope: 'denied'});
-    });
+        expect(invocations, hasLength(1), reason: 'exactly one channel call');
+        expect(invocations.single.method, 'requestPermissions');
+        expect(invocations.single.arguments, [kCameraScope]);
+        expect(statuses, {kCameraScope: 'denied'});
+      },
+    );
 
-    test('U9: a null platform reply normalizes to an empty map — no crash', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
-        call,
-      ) async => null);
-      final client = MethodChannelZuraffaPermissions();
+    test(
+      'U9: a null platform reply normalizes to an empty map — no crash',
+      () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              MethodChannelZuraffaPermissions.channel,
+              (call) async => null,
+            );
+        final client = MethodChannelZuraffaPermissions();
 
-      final statuses = await client.checkPermissions([kCameraScope]);
+        final statuses = await client.checkPermissions([kCameraScope]);
 
-      expect(
-        statuses,
-        isEmpty,
-        reason: 'a null reply means no scopes reported — degrade, never throw',
-      );
-    });
+        expect(
+          statuses,
+          isEmpty,
+          reason:
+              'a null reply means no scopes reported — degrade, never throw',
+        );
+      },
+    );
 
-    test('U10: non-string keys and values are stringified onto Map<String, String>', () async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
-        call,
-      ) async {
-        return <Object?, Object?>{1: true};
-      });
-      final client = MethodChannelZuraffaPermissions();
+    test(
+      'U10: non-string keys and values are stringified onto Map<String, String>',
+      () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
+              call,
+            ) async {
+              return <Object?, Object?>{1: true};
+            });
+        final client = MethodChannelZuraffaPermissions();
 
-      final statuses = await client.checkPermissions([kCameraScope]);
+        final statuses = await client.checkPermissions([kCameraScope]);
 
-      expect(
-        statuses,
-        {'1': 'true'},
-        reason: 'the standard codec reply is Map<Object?, Object?> — normalization stringifies',
-      );
-      expect(statuses[kCameraScope], isNull, reason: 'int key 1 is not the camera scope');
-    });
+        expect(
+          statuses,
+          {'1': 'true'},
+          reason:
+              'the standard codec reply is Map<Object?, Object?> — normalization stringifies',
+        );
+        expect(
+          statuses[kCameraScope],
+          isNull,
+          reason: 'int key 1 is not the camera scope',
+        );
+      },
+    );
 
-    test('U11: openSettings returns the channel bool; null degrades to false', () async {
-      final client = MethodChannelZuraffaPermissions();
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
-        call,
-      ) async => call.method == 'openSettings');
-      expect(await client.openSettings(), isTrue);
+    test(
+      'U11: openSettings returns the channel bool; null degrades to false',
+      () async {
+        final client = MethodChannelZuraffaPermissions();
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              MethodChannelZuraffaPermissions.channel,
+              (call) async => call.method == 'openSettings',
+            );
+        expect(await client.openSettings(), isTrue);
 
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(MethodChannelZuraffaPermissions.channel, (
-        call,
-      ) async => null);
-      expect(
-        await client.openSettings(),
-        isFalse,
-        reason: 'a null verdict means settings were not launched',
-      );
-    });
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(
+              MethodChannelZuraffaPermissions.channel,
+              (call) async => null,
+            );
+        expect(
+          await client.openSettings(),
+          isFalse,
+          reason: 'a null verdict means settings were not launched',
+        );
+      },
+    );
   });
 
   group('adapter wire-to-enum bridge (FR-005, FR-006, FR-007)', () {
-    test('U12: check maps every known wire status onto the typed enum', () async {
-      final scripted = _ScriptedPermissionsPlatform(
-        checkReply: {
-          kCameraScope: 'granted',
-          kPhotosScope: 'denied',
-          kMicrophoneScope: 'permanentlyDenied',
-        },
-      );
-      final adapter = MethodChannelPermissionAdapter(platform: scripted);
+    test(
+      'U12: check maps every known wire status onto the typed enum',
+      () async {
+        final scripted = _ScriptedPermissionsPlatform(
+          checkReply: {
+            kCameraScope: 'granted',
+            kPhotosScope: 'denied',
+            kMicrophoneScope: 'permanentlyDenied',
+          },
+        );
+        final adapter = MethodChannelPermissionAdapter(platform: scripted);
 
-      expect(await adapter.check(kCameraScope), PermissionStatus.granted);
-      expect(await adapter.check(kPhotosScope), PermissionStatus.denied);
-      expect(
-        await adapter.check(kMicrophoneScope),
-        PermissionStatus.permanentlyDenied,
-      );
-    });
+        expect(await adapter.check(kCameraScope), PermissionStatus.granted);
+        expect(await adapter.check(kPhotosScope), PermissionStatus.denied);
+        expect(
+          await adapter.check(kMicrophoneScope),
+          PermissionStatus.permanentlyDenied,
+        );
+      },
+    );
 
-    test('U13: check degrades unknown and missing wire values to undetermined', () async {
-      final scripted = _ScriptedPermissionsPlatform(checkReply: {
-        kCameraScope: 'brandNewFutureStatus',
-      });
-      final adapter = MethodChannelPermissionAdapter(platform: scripted);
+    test(
+      'U13: check degrades unknown and missing wire values to undetermined',
+      () async {
+        final scripted = _ScriptedPermissionsPlatform(
+          checkReply: {kCameraScope: 'brandNewFutureStatus'},
+        );
+        final adapter = MethodChannelPermissionAdapter(platform: scripted);
 
-      expect(
-        await adapter.check(kCameraScope),
-        PermissionStatus.undetermined,
-        reason: 'an unknown wire value from a newer native SDK never crashes older apps',
-      );
-      expect(
-        await adapter.check(kPhotosScope),
-        PermissionStatus.undetermined,
-        reason: 'a scope the reply omits has no verdict — undetermined',
-      );
-    });
+        expect(
+          await adapter.check(kCameraScope),
+          PermissionStatus.undetermined,
+          reason:
+              'an unknown wire value from a newer native SDK never crashes older apps',
+        );
+        expect(
+          await adapter.check(kPhotosScope),
+          PermissionStatus.undetermined,
+          reason: 'a scope the reply omits has no verdict — undetermined',
+        );
+      },
+    );
 
-    test('U14: request returns a result carrying scope, mapped status, and a real requestedAt', () async {
-      final scripted = _ScriptedPermissionsPlatform(
-        requestReply: {kCameraScope: 'granted'},
-      );
-      final adapter = MethodChannelPermissionAdapter(platform: scripted);
-      final before = DateTime.now().millisecondsSinceEpoch;
+    test(
+      'U14: request returns a result carrying scope, mapped status, and a real requestedAt',
+      () async {
+        final scripted = _ScriptedPermissionsPlatform(
+          requestReply: {kCameraScope: 'granted'},
+        );
+        final adapter = MethodChannelPermissionAdapter(platform: scripted);
+        final before = DateTime.now().millisecondsSinceEpoch;
 
-      final result = await adapter.request(kCameraScope);
+        final result = await adapter.request(kCameraScope);
 
-      expect(result.scope, kCameraScope);
-      expect(result.status, PermissionStatus.granted);
-      expect(
-        result.requestedAt,
-        greaterThanOrEqualTo(before),
-        reason: 'requestedAt is a real epoch-milliseconds timestamp, not zero',
-      );
-      expect(
-        result.requestedAt,
-        lessThanOrEqualTo(DateTime.now().millisecondsSinceEpoch + 5),
-      );
-    });
+        expect(result.scope, kCameraScope);
+        expect(result.status, PermissionStatus.granted);
+        expect(
+          result.requestedAt,
+          greaterThanOrEqualTo(before),
+          reason:
+              'requestedAt is a real epoch-milliseconds timestamp, not zero',
+        );
+        expect(
+          result.requestedAt,
+          lessThanOrEqualTo(DateTime.now().millisecondsSinceEpoch + 5),
+        );
+      },
+    );
 
-    test('U15: openSettings delegates to the platform and returns its verdict', () async {
-      final launched = MethodChannelPermissionAdapter(
-        platform: _ScriptedPermissionsPlatform(settingsLaunched: true),
-      );
-      final refused = MethodChannelPermissionAdapter(
-        platform: _ScriptedPermissionsPlatform(settingsLaunched: false),
-      );
-      expect(await launched.openSettings(), isTrue);
-      expect(await refused.openSettings(), isFalse);
-    });
+    test(
+      'U15: openSettings delegates to the platform and returns its verdict',
+      () async {
+        final launched = MethodChannelPermissionAdapter(
+          platform: _ScriptedPermissionsPlatform(settingsLaunched: true),
+        );
+        final refused = MethodChannelPermissionAdapter(
+          platform: _ScriptedPermissionsPlatform(settingsLaunched: false),
+        );
+        expect(await launched.openSettings(), isTrue);
+        expect(await refused.openSettings(), isFalse);
+      },
+    );
 
-    test('U16: a constructor-supplied platform overrides the registered instance', () async {
-      // The registered instance would answer undetermined; the injected
-      // one answers granted — the injected seam must win.
-      final adapter = MethodChannelPermissionAdapter(
-        platform: _ScriptedPermissionsPlatform(checkReply: {kCameraScope: 'granted'}),
-      );
-      expect(
-        await adapter.check(kCameraScope),
-        PermissionStatus.granted,
-        reason: 'the injected platform is the one consulted',
-      );
-    });
+    test(
+      'U16: a constructor-supplied platform overrides the registered instance',
+      () async {
+        // The registered instance would answer undetermined; the injected
+        // one answers granted — the injected seam must win.
+        final adapter = MethodChannelPermissionAdapter(
+          platform: _ScriptedPermissionsPlatform(
+            checkReply: {kCameraScope: 'granted'},
+          ),
+        );
+        expect(
+          await adapter.check(kCameraScope),
+          PermissionStatus.granted,
+          reason: 'the injected platform is the one consulted',
+        );
+      },
+    );
 
-    test('U17: without an override the adapter routes through the registered instance', () async {
-      ZuraffaPermissionsPlatform.instance = _ScriptedPermissionsPlatform(
-        checkReply: {kCameraScope: 'limited'},
-      );
-      final adapter = MethodChannelPermissionAdapter();
+    test(
+      'U17: without an override the adapter routes through the registered instance',
+      () async {
+        ZuraffaPermissionsPlatform.instance = _ScriptedPermissionsPlatform(
+          checkReply: {kCameraScope: 'limited'},
+        );
+        final adapter = MethodChannelPermissionAdapter();
 
-      expect(
-        await adapter.check(kCameraScope),
-        PermissionStatus.limited,
-        reason: 'no injection — the registered instance is consulted',
-      );
-    });
+        expect(
+          await adapter.check(kCameraScope),
+          PermissionStatus.limited,
+          reason: 'no injection — the registered instance is consulted',
+        );
+      },
+    );
   });
 }

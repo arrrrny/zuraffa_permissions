@@ -35,6 +35,11 @@ dependencies:
   get_it: ^9.2.1
   zuraffa: ^6.1.0
 
+  # The app-facing GetIt the example wires directly (registerPermissionDependencies).
+  get_it: ^9.2.1
+  # Re-exports GetIt / the DI surface the example's own wiring uses.
+  zuraffa: ^6.1.0
+
   # The federated plugin under test (app-facing + platform siblings).
   zuraffa_permissions:
     path: ../
@@ -55,6 +60,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^6.0.0
+  mutation_test: ^1.8.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

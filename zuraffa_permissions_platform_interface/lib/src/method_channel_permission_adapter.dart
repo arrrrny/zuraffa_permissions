@@ -21,9 +21,8 @@ class MethodChannelPermissionAdapter implements PermissionPort {
   /// [ZuraffaPermissionsPlatform.instance]).
   final ZuraffaPermissionsPlatform platform;
 
-  MethodChannelPermissionAdapter({
-    ZuraffaPermissionsPlatform? platform,
-  }) : platform = platform ?? ZuraffaPermissionsPlatform.instance;
+  MethodChannelPermissionAdapter({ZuraffaPermissionsPlatform? platform})
+    : platform = platform ?? ZuraffaPermissionsPlatform.instance;
 
   @override
   Future<PermissionStatus> check(String scope) async {

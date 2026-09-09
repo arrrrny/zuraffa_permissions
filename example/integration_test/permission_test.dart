@@ -41,7 +41,8 @@ void main() {
       expect(
         bio,
         isNot(PermissionStatus.undetermined),
-        reason: 'native plugin must be live; undetermined means the '
+        reason:
+            'native plugin must be live; undetermined means the '
             'in-memory fallback answered instead of the OS',
       );
 

@@ -37,9 +37,6 @@ class MethodChannelZuraffaPermissions extends ZuraffaPermissionsPlatform {
 
   static Map<String, String> _normalize(Map<Object?, Object?>? raw) {
     if (raw == null) return const {};
-    return {
-      for (final entry in raw.entries)
-        '${entry.key}': '${entry.value}',
-    };
+    return {for (final entry in raw.entries) '${entry.key}': '${entry.value}'};
   }
 }
