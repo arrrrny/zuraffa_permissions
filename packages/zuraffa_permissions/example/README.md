@@ -12,3 +12,8 @@ that exercises every built-in permission scope through the package's public
   real method-channel platform adapters on Android, iOS, and macOS.
 
 Run it with `flutter run` from this directory.
+
+This example follows the general zuraffa plugin-example contract —
+`~/Developer/zuraffa/templates/plugin-example/TEMPLATE.md` (scaffold,
+real-driver-first binding, simulator switch, one panel per operation,
+verbatim error banner, full-flow widget test, verification checklist).
