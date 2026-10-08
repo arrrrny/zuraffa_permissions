@@ -10,7 +10,7 @@ Pod::Spec.new do |s|
   s.license          = { :type => 'Apache-2.0', :file => '../LICENSE' }
   s.author           = { 'Zuraffa' => 'https://github.com/arrrrny' }
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*'
+  s.source_files     = 'zuraffa_permissions_macos/Sources/zuraffa_permissions_macos/**/*'
   s.dependency 'FlutterMacOS'
   s.platform         = :osx, '10.15'
   s.swift_version    = '5.9'
