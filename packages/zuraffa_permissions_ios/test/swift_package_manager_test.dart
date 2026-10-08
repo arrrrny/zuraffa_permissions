@@ -24,6 +24,7 @@ void main() {
   test('manifest declares the plugin package for iOS', () {
     final contents = File('ios/$packageName/Package.swift').readAsStringSync();
     expect(contents, contains('name: "$packageName"'));
+    expect(contents, contains('.library(name: "zuraffa-permissions-ios"'));
     expect(contents, contains(".iOS(\"13.0\")"));
     expect(contents, contains('swift-tools-version: 5.9'));
   });

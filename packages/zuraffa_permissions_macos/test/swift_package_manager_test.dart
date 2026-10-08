@@ -25,6 +25,7 @@ void main() {
     final contents =
         File('macos/$packageName/Package.swift').readAsStringSync();
     expect(contents, contains('name: "$packageName"'));
+    expect(contents, contains('.library(name: "zuraffa-permissions-macos"'));
     expect(contents, contains(".macOS(\"10.15\")"));
     expect(contents, contains('swift-tools-version: 5.9'));
   });
