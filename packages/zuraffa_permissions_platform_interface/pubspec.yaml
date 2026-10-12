@@ -3,7 +3,7 @@ description: >-
   The platform interface contract for zuraffa_permissions: the
   MethodChannel protocol and the PermissionPort bridge platform
   implementations conform to.
-version: 1.0.0
+version: 1.0.1
 homepage: https://zuraffa.com
 
 environment:
@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.1.8
-  zuraffa_permissions: ^1.0.0
+  zuraffa_permissions: ^1.0.1
 
 dependency_overrides:
   zuraffa_permissions:

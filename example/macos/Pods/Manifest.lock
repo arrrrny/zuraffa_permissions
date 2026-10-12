@@ -1,0 +1,22 @@
+PODS:
+  - FlutterMacOS (1.0.0)
+  - zuraffa_permissions_macos (0.1.0):
+    - FlutterMacOS
+
+DEPENDENCIES:
+  - FlutterMacOS (from `Flutter/ephemeral`)
+  - zuraffa_permissions_macos (from `Flutter/ephemeral/.symlinks/plugins/zuraffa_permissions_macos/macos`)
+
+EXTERNAL SOURCES:
+  FlutterMacOS:
+    :path: Flutter/ephemeral
+  zuraffa_permissions_macos:
+    :path: Flutter/ephemeral/.symlinks/plugins/zuraffa_permissions_macos/macos
+
+SPEC CHECKSUMS:
+  FlutterMacOS: c232990155153907050900a2e175c7773903ba4e
+  zuraffa_permissions_macos: a81f6d7bea5e2929a13b360bf01ffc3043659b18
+
+PODFILE CHECKSUM: 1e95c36afbfd1cb6423ceca4de7a8e1b256fb6ac
+
+COCOAPODS: 1.17.0

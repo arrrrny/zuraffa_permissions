@@ -1,6 +1,6 @@
 name: zuraffa_permissions
 description: Typed permission requests for the Zuraffa ecosystem.
-version: 1.0.0
+version: 1.0.1
 homepage: https://zuraffa.com
 
 environment:
