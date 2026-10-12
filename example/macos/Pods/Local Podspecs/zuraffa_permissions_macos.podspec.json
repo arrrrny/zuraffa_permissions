@@ -1,0 +1,26 @@
+{
+  "name": "zuraffa_permissions_macos",
+  "version": "0.1.0",
+  "summary": "The macOS implementation of zuraffa_permissions.",
+  "description": "Real permission requests: camera, photos, notifications, location, microphone, contacts, calendar, biometrics.",
+  "homepage": "https://zuraffa.com",
+  "license": {
+    "type": "Apache-2.0",
+    "file": "../LICENSE"
+  },
+  "authors": {
+    "Zuraffa": "https://github.com/arrrrny"
+  },
+  "source": {
+    "path": "."
+  },
+  "source_files": "Classes/**/*",
+  "dependencies": {
+    "FlutterMacOS": []
+  },
+  "platforms": {
+    "osx": "10.15"
+  },
+  "swift_versions": "5.9",
+  "swift_version": "5.9"
+}

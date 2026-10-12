@@ -1,0 +1,6 @@
+framework module zuraffa_permissions_ios {
+  umbrella header "zuraffa_permissions_ios-umbrella.h"
+
+  export *
+  module * { export * }
+}
