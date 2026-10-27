@@ -14,7 +14,7 @@ dependencies:
   flutter:
     sdk: flutter
   plugin_platform_interface: ^2.1.8
-  zuraffa_permissions: ^1.0.1
+  zuraffa_permissions: ^7.2.0
 
 dependency_overrides:
   zuraffa_permissions:

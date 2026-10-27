@@ -20,8 +20,8 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  zuraffa_permissions: ^1.0.1
-  zuraffa_permissions_platform_interface: ^1.0.0
+  zuraffa_permissions: ^7.2.0
+  zuraffa_permissions_platform_interface: ^7.2.0
 
 dependency_overrides:
   zuraffa_permissions:
