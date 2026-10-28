@@ -2,7 +2,7 @@ name: zuraffa_permissions_macos
 description: >-
   The macOS implementation of zuraffa_permissions (AVFoundation, Photos,
   CoreLocation, UNUserNotificationCenter) across the eleven built-in scopes.
-version: 7.2.0
+version: 7.3.0
 homepage: https://zuraffa.com
 
 environment:
@@ -20,8 +20,8 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  zuraffa_permissions: ^7.2.0
-  zuraffa_permissions_platform_interface: ^7.2.0
+  zuraffa_permissions: ^7.3.0
+  zuraffa_permissions_platform_interface: ^7.3.0
 
 dependency_overrides:
   zuraffa_permissions:
@@ -30,6 +30,8 @@ dependency_overrides:
     path: ../zuraffa_permissions_platform_interface
 
   xml: 7.1.0
+  zuraffa:
+    path: ../../../zuraffa
 dev_dependencies:
   flutter_test:
     sdk: flutter
