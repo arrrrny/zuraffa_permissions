@@ -1,0 +1,121 @@
+name: test
+
+# Spec 1205 (issue #13): this repo has no consuming app, so CI is the
+# verifiable bar that keeps it "healthy but unconsumed" — analyze, test and
+# publish dry-run for every federated member at the current fleet version,
+# plus a fleet parity check (mono versions, family constraints, README
+# install guide) and the example app's headless tests.
+#
+# Single lane (ubuntu-latest): unlike zuraffa_intents' suite, nothing in
+# these tests is platform-conditional (no Platform.is* branching — the
+# adapters' Dart tests mock the method channel), so the ubuntu + macos
+# matrix would buy nothing here.
+#
+# The committed pubspecs carry dev-only dependency_overrides that point at
+# sibling working copies OUTSIDE this repo (`path: ../../../zuraffa`) and
+# cannot resolve on a fresh checkout, so every job strips them and resolves
+# against the published fleet. The deletion is never committed (see
+# PUBLISH.md: dev-only state; pub strips overrides on publish anyway) —
+# which is also why pub may report the stripped pubspec as "modified in
+# git" during the dry-run: expected noise, the exit code is what gates.
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  fleet-parity:
+    name: fleet parity (versions + family constraints + README install guide)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: check fleet version parity
+        run: ./scripts/check_fleet_versions.sh
+
+  member:
+    name: ${{ matrix.member }} (${{ matrix.tool }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - member: zuraffa_permissions
+            tool: dart
+          - member: zuraffa_permissions_platform_interface
+            tool: flutter
+          - member: zuraffa_permissions_android
+            tool: flutter
+          - member: zuraffa_permissions_ios
+            tool: flutter
+          - member: zuraffa_permissions_macos
+            tool: flutter
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: strip dev-only path overrides (resolve against the published fleet)
+        run: ./scripts/strip_dev_overrides.sh
+
+      - name: pub get
+        run: ${{ matrix.tool }} pub get
+        working-directory: packages/${{ matrix.member }}
+
+      - name: analyze
+        run: ${{ matrix.tool }} analyze
+        working-directory: packages/${{ matrix.member }}
+
+      # zuraffa_permissions_android has no test/ yet — analyze and the
+      # dry-run still gate it (do not invent tests to fill the gap).
+      - name: test (concurrency capped at 2 — shared-host guard)
+        working-directory: packages/${{ matrix.member }}
+        run: |
+          if [ ! -d test ]; then
+            echo "no test/ directory in ${{ matrix.member }} — analyze and publish dry-run still gate this member"
+            exit 0
+          fi
+          if [ "${{ matrix.tool }}" = "dart" ]; then
+            dart test -j 2
+          else
+            flutter test --concurrency=2
+          fi
+
+      - name: publish dry-run
+        run: ${{ matrix.tool }} pub publish --dry-run
+        working-directory: packages/${{ matrix.member }}
+
+  example:
+    name: example app (headless widget tests)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: strip dev-only path overrides (resolve against the published fleet)
+        run: ./scripts/strip_dev_overrides.sh
+
+      - name: flutter pub get
+        run: flutter pub get
+        working-directory: packages/zuraffa_permissions/example
+
+      - name: flutter analyze
+        run: flutter analyze
+        working-directory: packages/zuraffa_permissions/example
+
+      # The outcome-matrix demonstrator (specs/007); integration_test/
+      # variants need a device or simulator and stay out of CI.
+      - name: flutter test (headless, concurrency capped at 2)
+        run: flutter test --concurrency=2
+        working-directory: packages/zuraffa_permissions/example
