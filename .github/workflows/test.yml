@@ -92,8 +92,20 @@ jobs:
           fi
 
       - name: publish dry-run
-        run: ${{ matrix.tool }} pub publish --dry-run
         working-directory: packages/${{ matrix.member }}
+        run: |
+          # The strip step rewrote the member's pubspec.yaml on purpose (the
+          # dev-only overrides cannot resolve on a fresh checkout), but pub
+          # refuses to publish from a dirty tree — "checked-in files are
+          # modified in git" exits 65. Commit the stripped state locally
+          # (never pushed) so the dry-run validates the exact publishable
+          # content — pub strips dependency_overrides from the archive
+          # anyway — from a clean git state.
+          git add -A .
+          git diff --cached --quiet || git -c user.name="zuraffa CI" \
+            -c user.email="ci@zuraffa.local" \
+            commit -q -m "ci: strip dev-only dependency_overrides (publish-validation working state)"
+          ${{ matrix.tool }} pub publish --dry-run
 
   example:
     name: example app (headless widget tests)
