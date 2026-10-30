@@ -10,10 +10,13 @@ import AppKit
 /// The macOS implementation of zuraffa_permissions.
 ///
 /// macOS shares the framework-level permission surfaces with iOS
-/// (AVFoundation, Photos, Contacts, EventKit, LocalAuthentication) but
-/// routes notifications through NSUserNotification-style delegation and
-/// settings through NSWorkspace. Location uses CoreLocation the same
-/// way. The wire statuses mirror the Dart vocabulary.
+/// (AVFoundation, Photos, Contacts, EventKit, LocalAuthentication) and
+/// routes notifications through the same UserNotifications framework
+/// (UNUserNotificationCenter, macOS 10.14+); settings deep-links NSWorkspace.
+/// The macOS desktop surface supports notifications natively; camera and
+/// location are unsupported scopes — they report denied WITHOUT prompting
+/// (issue #14, the adopting app's parity contract). The wire statuses
+/// mirror the Dart vocabulary.
 public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
   private static let channelName = "zuraffa_permissions"
 
@@ -73,16 +76,16 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
 
   private func checkScope(scope: String, completion: @escaping (String) -> Void) {
     switch scope {
-    case "camera":
-      completion(avStatus(for: AVMediaType.video))
+    case "camera", "locationWhenInUse", "locationAlways":
+      // Unsupported on the macOS desktop surface: denied, without
+      // prompting (issue #14) — check never prompts anyway.
+      completion(denied)
     case "microphone":
       completion(avStatus(for: AVMediaType.audio))
     case "photos":
       completion(photoStatus())
     case "notifications":
       completion(notificationStatus())
-    case "locationWhenInUse", "locationAlways":
-      completion(locationStatus())
     case "contacts":
       completion(contactsStatus())
     case "calendar":
@@ -90,7 +93,9 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
     case "biometrics":
       completion(biometricsStatus())
     default:
-      completion(undetermined)
+      // Unknown scope: unsupported — denied without prompting, never
+      // undetermined (the adopting app maps unknown to denied).
+      completion(denied)
     }
   }
 
@@ -118,16 +123,16 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
 
   private func requestScope(scope: String, completion: @escaping (String) -> Void) {
     switch scope {
-    case "camera":
-      requestAV(.video, completion: completion)
+    case "camera", "locationWhenInUse", "locationAlways":
+      // Unsupported on the macOS desktop surface: denied WITHOUT
+      // prompting (issue #14) — no OS dialog may ever appear for them.
+      completion(denied)
     case "microphone":
       requestAV(.audio, completion: completion)
     case "photos":
       requestPhotos(completion: completion)
     case "notifications":
       requestNotifications(completion: completion)
-    case "locationWhenInUse", "locationAlways":
-      requestLocation(completion: completion)
     case "contacts":
       requestContacts(completion: completion)
     case "calendar":
@@ -135,7 +140,10 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
     case "biometrics":
       completion(biometricsStatus())
     default:
-      completion(undetermined)
+      // Unknown scope: unsupported — denied without prompting, never
+      // undetermined and never a prompt (the adopting app maps unknown
+      // to denied).
+      completion(denied)
     }
   }
 
@@ -200,66 +208,35 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
 
   /// macOS notification authorization runs through the same
   /// UserNotifications framework (UNUserNotificationCenter) on 10.14+.
+  /// `check` reports the current authorization status: a decided denial
+  /// is `denied` (the app routes it to settings), a never-decided scope
+  /// is `undetermined`, and every grant — including the provisional and
+  /// ephemeral cases — is `granted` (the app folds provisional at its
+  /// own boundary).
   private func notificationStatus() -> String {
     let sem = DispatchSemaphore(value: 0)
-    var isAuthorized = false
+    var status = undetermined
     UNUserNotificationCenter.current().getNotificationSettings { settings in
       switch settings.authorizationStatus {
-      case .authorized, .provisional, .ephemeral: isAuthorized = true
-      default: isAuthorized = false
+      case .authorized, .provisional, .ephemeral: status = self.granted
+      case .denied: status = self.denied
+      case .notDetermined: status = self.undetermined
+      @unknown default: status = self.undetermined
       }
       sem.signal()
     }
     _ = sem.wait(timeout: .now() + 2)
-    return isAuthorized ? granted : undetermined
+    return status
   }
 
   private func requestNotifications(completion: @escaping (String) -> Void) {
+    // Idempotent at the OS level: an already-decided scope resolves
+    // immediately without a dialog, so a denied scope is never
+    // re-prompted (FR-005) — only Settings can change the answer.
     UNUserNotificationCenter.current().requestAuthorization(options: [
       .alert, .badge, .sound,
     ]) { grantedAccess, _ in
       completion(grantedAccess ? self.granted : self.denied)
-    }
-  }
-
-  // MARK: - Location
-
-  private func locationStatus() -> String {
-    switch CLLocationManager.authorizationStatus() {
-    case .authorizedAlways, .authorizedWhenInUse: return granted
-    case .notDetermined: return undetermined
-    case .denied: return denied
-    case .restricted: return restricted
-    @unknown default: return undetermined
-    }
-  }
-
-  private func requestLocation(completion: @escaping (String) -> Void) {
-    let status = locationStatus()
-    if status != undetermined {
-      completion(status)
-      return
-    }
-    // Same bounded-poll workaround as iOS: request + poll the status. The
-    // window is ~30s (200 × 0.15s) so a real user has time to respond to the
-    // system dialog; a 9s window is too short and would wrongly report
-    // undetermined for a slow tapper.
-    let manager = CLLocationManager()
-    var attempts = 0
-    func poll() {
-      DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-        attempts += 1
-        let current = self.locationStatus()
-        if current != self.undetermined || attempts >= 200 {
-          completion(current)
-        } else {
-          poll()
-        }
-      }
-    }
-    DispatchQueue.main.async {
-      manager.requestWhenInUseAuthorization()
-      poll()
     }
   }
 
@@ -342,15 +319,17 @@ public class ZuraffaPermissionsPlugin: NSObject, FlutterPlugin {
 
   // MARK: - Settings
 
-  /// Opens System Preferences → Security & Privacy → Privacy → the
-  /// app's pane on macOS.
+  /// Opens System Settings → Notifications — the pane where the app's
+  /// notification permission is controlled. The adopting app's
+  /// settings routing deep-links exactly this pane
+  /// (`x-apple.systempreferences:com.apple.Notifications-Settings`);
+  /// parity is the contract, not just "Settings opens" (issue #14).
   private func openSettings() -> Bool {
-    let bundleId = Bundle.main.bundleIdentifier ?? ""
-    let urlString =
-      "x-apple.systempreferences:com.apple.preference.security?Privacy"
-    guard let url = URL(string: urlString) else { return false }
-    NSWorkspace.shared.open(url)
-    _ = bundleId // The pane is app-agnostic on macOS; the URL opens it.
-    return true
+    guard
+      let url = URL(
+        string: "x-apple.systempreferences:com.apple.Notifications-Settings"
+      )
+    else { return false }
+    return NSWorkspace.shared.open(url)
   }
 }

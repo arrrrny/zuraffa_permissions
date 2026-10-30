@@ -13,7 +13,7 @@ framework.
 | [`packages/zuraffa_permissions_platform_interface`](packages/zuraffa_permissions_platform_interface/) | MethodChannel protocol + `PermissionPort` bridge |
 | [`packages/zuraffa_permissions_android`](packages/zuraffa_permissions_android/) | Android implementation (ActivityCompat) |
 | [`packages/zuraffa_permissions_ios`](packages/zuraffa_permissions_ios/) | iOS implementation (AVFoundation, Photos, UNUserNotificationCenter, CoreLocation) |
-| [`packages/zuraffa_permissions_macos`](packages/zuraffa_permissions_macos/) | macOS implementation (AppKit, NSWorkspace) |
+| [`packages/zuraffa_permissions_macos`](packages/zuraffa_permissions_macos/) | macOS implementation (AppKit, NSWorkspace, UNUserNotificationCenter) |
 
 Publish from each package directory (`packages/<name>`); the federated
 siblings depend on each other via hosted dependencies.
@@ -41,13 +41,23 @@ dependencies:
 | --- | --- | --- |
 | Android | `zuraffa_permissions_android` | `ActivityCompat` runtime prompts |
 | iOS | `zuraffa_permissions_ios` | AVFoundation, Photos, UIKit, LocalAuthentication, Contacts, EventKit |
-| macOS | `zuraffa_permissions_macos` | AppKit, AVFoundation, Photos, UserNotifications, LocalAuthentication, Contacts, EventKit |
+| macOS | `zuraffa_permissions_macos` | AppKit, AVFoundation (microphone), Photos, UserNotifications, LocalAuthentication, Contacts, EventKit |
 | Web / Windows / Linux | pure-Dart fallback in the app package | `InMemoryPermissionAdapter` default — no OS prompts; statuses stay `undetermined` (tests and previews) |
 
 The eleven built-in scopes (camera, photos, notifications,
 locationWhenInUse, locationAlways, microphone, storage, biometrics,
 contacts, calendar, tracking) are zero-config; custom scopes register
 through `PermissionScopeRegistry`.
+
+macOS surface notes (verified in #14): the notification scope runs on
+UNUserNotificationCenter — `check` reports the current authorization
+status (a decided denial is `denied`, a provisional/ephemeral grant is
+`granted`), `request` prompts once and returns the outcome, and
+`openSettings()` deep-links the system Notifications pane
+(`x-apple.systempreferences:com.apple.Notifications-Settings`). Camera
+and location are unsupported on the macOS desktop surface: `check` and
+`request` report `denied` WITHOUT ever prompting, as does any unknown
+scope.
 
 ## Fleet status & adoption note
 
