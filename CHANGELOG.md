@@ -1,3 +1,11 @@
+# Changelog
+
+## Unreleased
+
+- Fleet hardening (spec 1205, issue #13): CI now runs analyze, tests and a publish dry-run for every federated member plus the example app's headless tests, with a fleet parity check enforcing mono versions, family constraints and the README install guide.
+- The 7.3.0 entry was missing from every package CHANGELOG (flagged by the publish dry-run); it is propagated into all five.
+- README gains the install guide, platform support matrix, fleet adoption note and release policy.
+
 ## 7.3.0 - 2026-10-28
 
 - Mono-version fleet alignment: the whole zuraffa family ships at 7.3.0 together with the core.
@@ -10,8 +18,6 @@
 - `zuraffa` dependency constraint unified to ^7.2.0 across the fleet.
 - zuraffa_storage now wraps the maintained `zuraffa_minio` fork instead of the abandoned `minio` package (xml 7 compatible).
 - Fleet-wide `dependency_overrides: xml: 7.1.0` policy; README install guides refreshed to the release version.
-
-# Changelog
 
 ## 1.0.1
 
