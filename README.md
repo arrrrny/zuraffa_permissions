@@ -25,10 +25,15 @@ dependencies:
   zuraffa_permissions: ^7.3.0
 ```
 
-That is the only dependency an app adds: the platform interface and the
-endorsed adapters are federated siblings resolved automatically. The five
-members ship as one mono-versioned family — the snippet above always
-matches the current fleet version.
+That is the base dependency an app adds. There is no plugin endorsement in
+this pure-Dart package: add the platform adapter(s) you need explicitly
+(the platform interface comes along transitively):
+
+```yaml
+dependencies:
+  zuraffa_permissions: ^7.3.0
+  zuraffa_permissions_android: ^7.3.0 # plus _ios / _macos as needed
+```
 
 ## Platform support
 

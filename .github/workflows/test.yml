@@ -1,5 +1,8 @@
 name: test
 
+permissions:
+  contents: read
+
 # Spec 1205 (issue #13): this repo has no consuming app, so CI is the
 # verifiable bar that keeps it "healthy but unconsumed" — analyze, test and
 # publish dry-run for every federated member at the current fleet version,
@@ -26,7 +29,7 @@ on:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' }}
 
 jobs:
   fleet-parity:
