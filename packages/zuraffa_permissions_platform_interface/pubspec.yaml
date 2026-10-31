@@ -21,8 +21,6 @@ dependency_overrides:
     path: ../zuraffa_permissions
 
   xml: 7.1.0
-  zuraffa:
-    path: ../../../zuraffa
 dev_dependencies:
   flutter_test:
     sdk: flutter
