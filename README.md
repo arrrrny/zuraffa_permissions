@@ -22,7 +22,7 @@ siblings depend on each other via hosted dependencies.
 
 ```yaml
 dependencies:
-  zuraffa_permissions: ^7.3.0
+  zuraffa_permissions: ^7.3.2
 ```
 
 That is the base dependency an app adds. There is no plugin endorsement in
@@ -31,8 +31,8 @@ this pure-Dart package: add the platform adapter(s) you need explicitly
 
 ```yaml
 dependencies:
-  zuraffa_permissions: ^7.3.0
-  zuraffa_permissions_android: ^7.3.0 # plus _ios / _macos as needed
+  zuraffa_permissions: ^7.3.2
+  zuraffa_permissions_android: ^7.3.2 # plus _ios / _macos as needed
 ```
 
 ## Platform support
