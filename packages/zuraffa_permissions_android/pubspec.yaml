@@ -2,7 +2,7 @@ name: zuraffa_permissions_android
 description: >-
   The Android implementation of zuraffa_permissions (ActivityCompat-based)
   covering camera, microphone, location, contacts, notifications, and more.
-version: 7.3.0
+version: 7.3.2
 homepage: https://zuraffa.com
 
 environment:
@@ -21,8 +21,8 @@ flutter:
 dependencies:
   flutter:
     sdk: flutter
-  zuraffa_permissions: ^7.3.0
-  zuraffa_permissions_platform_interface: ^7.3.0
+  zuraffa_permissions: ^7.3.2
+  zuraffa_permissions_platform_interface: ^7.3.2
 
 dependency_overrides:
   zuraffa_permissions:
