@@ -6,7 +6,8 @@ set -e
 # this repo (`path: ../../../zuraffa`), so a fresh clone/CI checkout cannot
 # resolve without them. CI (and any build against published packages) runs
 # this first; the deletion is never committed — the overrides stay dev-only
-# state (see PUBLISH.md: pub strips dependency_overrides on publish).
+# state (overrides are never committed: pub does not strip them from the
+# archive, it only ignores them in hosted packages).
 #
 # Usage: scripts/strip_dev_overrides.sh [pubspec.yaml ...]
 #        With no arguments, every member (and the app package's example)
