@@ -71,7 +71,7 @@ class PermissionService {
   final PermissionScopeRegistry registry;
 
   PermissionService({PermissionPort? port, PermissionScopeRegistry? registry})
-    : port = port ?? InMemoryPermissionAdapter(),
+    : port = port ?? _defaultPermissionPort(),
       registry = registry ?? PermissionScopeRegistry.withBuiltIns();
 
   /// Current status of [scopeId] without prompting.

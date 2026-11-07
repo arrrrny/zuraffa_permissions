@@ -1,3 +1,7 @@
+## 7.3.8 - 2026-11-07
+
+- `PermissionService` now consults the platform port factory registered by a federated platform package (`setPlatformPermissionPortFactory`, the pattern `zuraffa_permissions_macos` already calls from `registerWith`) instead of hardcoding `InMemoryPermissionAdapter` — without the factory the constructor produced a no-op adapter, so apps that never injected a port never actually requested permissions from the OS.
+
 ## 7.3.7 - 2026-11-07
 
 - Mono-version fleet alignment to 7.3.7; internal dependencies refreshed; xml override 7.1.0.
