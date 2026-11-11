@@ -45,20 +45,7 @@ dependencies:
 # Resolve the federated siblings to this checkout (the Flutter federated
 # plugin example pattern) while the published artifacts use hosted deps.
 dependency_overrides:
-  zuraffa_permissions:
-    path: ../
-  zuraffa_permissions_platform_interface:
-    path: ../../zuraffa_permissions_platform_interface
-  zuraffa_permissions_android:
-    path: ../../zuraffa_permissions_android
-  zuraffa_permissions_ios:
-    path: ../../zuraffa_permissions_ios
-  zuraffa_permissions_macos:
-    path: ../../zuraffa_permissions_macos
-
   xml: 7.1.0
-  zuraffa:
-    path: ../../../../zuraffa
 dev_dependencies:
   flutter_test:
     sdk: flutter
