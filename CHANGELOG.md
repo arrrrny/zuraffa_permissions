@@ -1,3 +1,7 @@
+## 7.4.1 - 2026-11-11
+
+Fleet release 7.4.1: core adds zfa tunnel (Cloudflare-hosted MCP servers), MCP streamable-HTTP transport with usecase tools, blocking lifecycle hooks (#2032), typed tool param coercion (#2061); whole fleet mono-aligned to 7.4.1.
+
 ## 7.3.8 - 2026-11-07
 
 - `PermissionService` now consults the platform port factory registered by a federated platform package (`setPlatformPermissionPortFactory`, the pattern `zuraffa_permissions_macos` already calls from `registerWith`) instead of hardcoding `InMemoryPermissionAdapter` — without the factory the constructor produced a no-op adapter, so apps that never injected a port never actually requested permissions from the OS.
